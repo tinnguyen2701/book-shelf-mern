@@ -2,6 +2,7 @@
 const authRouter = require('express').Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 
 const User = require('../models/userModel');
 
@@ -43,10 +44,11 @@ authRouter.post('/login', async (req, res) => {
 
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
-        jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' }, function(err, token) {
+        jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '20s' }, function(err, token) {
           return res.status(200).json({
             success: true,
             token: token,
+            currentUser: user,
           });
         });
       } else {
@@ -54,6 +56,10 @@ authRouter.post('/login', async (req, res) => {
       }
     });
   });
+});
+
+authRouter.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+  return res.status(200).json(req.user);
 });
 
 module.exports = authRouter;

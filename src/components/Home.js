@@ -1,3 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-export default () => <h1> home</h1>;
+const Home = ({ currentUser }) => {
+  return <div>welcome {currentUser && currentUser.username}</div>;
+};
+
+export default connect(state => ({
+  currentUser: state.login.currentUser,
+}))(Home);

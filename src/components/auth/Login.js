@@ -5,6 +5,11 @@ import { LOGIN_REQUEST } from '../ducks';
 export default ({ history }) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
+  // const [visible, setVisible] = useState(false);
+
+  const onClickHandler = e => {
+    e.preventDefault();
+  };
 
   const onSubmitHandler = e => {
     e.preventDefault();
@@ -36,6 +41,9 @@ export default ({ history }) => {
           Submit
         </button>
       </p>
+      <a href="remember" onClick={e => onClickHandler(e)}>
+        forgot your password ?
+      </a>
     </form>
   );
 };

@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 const authRouter = require('./routers/authRouter');
 
@@ -18,6 +19,9 @@ mongoose
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 // router
 app.use('/api/auth', authRouter);

@@ -2,14 +2,19 @@ import { combineReducers, createStore, applyMiddleware } from 'redux';
 import { all } from 'redux-saga/effects';
 import createSagaMiddleware from 'redux-saga';
 
-import { registerSaga, loginSaga, currentUserReducer as currentUser } from './components/ducks';
+import {
+  registerSaga,
+  loginSaga,
+  loginReducer as login,
+  currentUserSaga,
+} from './components/ducks';
 
 const rootReducer = combineReducers({
-  currentUser,
+  login,
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([...registerSaga, ...loginSaga]);
+  yield all([...registerSaga, ...loginSaga, ...currentUserSaga]);
 };
 
 const sagaMiddleware = createSagaMiddleware();

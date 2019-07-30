@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { removeToken } from 'dorothy/utils/callApi';
 
 const Div = styled.div`
   > ul {
@@ -17,7 +18,14 @@ const Div = styled.div`
   }
 `;
 
-export default () => (
+const onClickHandler = (e, history) => {
+  e.preventDefault();
+  window.localStorage.removeItem('JWT');
+  removeToken();
+  history.push('/auth/login');
+};
+
+const Header = ({ history }) => (
   <Div>
     <ul>
       <li>
@@ -30,8 +38,12 @@ export default () => (
         <Link to="/auth/register">Register</Link>
       </li>
       <li>
-        <Link to="/auth/logout">Sign out</Link>
+        <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
+          Sign out
+        </Link>
       </li>
     </ul>
   </Div>
 );
+
+export default withRouter(Header);
