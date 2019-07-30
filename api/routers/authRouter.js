@@ -47,7 +47,7 @@ authRouter.post('/login', async (req, res) => {
 
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
-        jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' }, function(err, token) {
+        jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '20s' }, function(err, token) {
           return res.status(200).json({
             success: true,
             token: token,
