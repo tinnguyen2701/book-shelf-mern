@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import store from 'store';
+import { Link } from 'react-router-dom';
 import { LOGIN_REQUEST } from '../ducks';
 
 export default ({ history }) => {
@@ -15,7 +16,7 @@ export default ({ history }) => {
     <form onSubmit={e => onSubmitHandler(e)}>
       <p>
         <input
-          type="text"
+          type="email"
           placeholder="Email.."
           value={email || ''}
           onChange={e => setEmail(e.target.value)}
@@ -24,7 +25,7 @@ export default ({ history }) => {
       </p>
       <p>
         <input
-          type="text"
+          type="password"
           placeholder="Password.."
           value={password || ''}
           onChange={e => setPassword(e.target.value)}
@@ -36,6 +37,7 @@ export default ({ history }) => {
           Submit
         </button>
       </p>
+      <Link to="/auth/verify">forgot your password ?</Link>
     </form>
   );
 };
