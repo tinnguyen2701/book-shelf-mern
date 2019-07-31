@@ -47,7 +47,7 @@ authRouter.post('/login', async (req, res) => {
 
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
-        jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '20s' }, function(err, token) {
+        jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' }, function(err, token) {
           return res.status(200).json({
             success: true,
             token: token,
@@ -109,14 +109,36 @@ authRouter.post('/verify', async (req, res) => {
   } else {
     User.findOne({ email })
       .then(user => {
-        if (user && user.verify === code) return res.status(200).json({ success: true });
-        return res.status(403).json({ success: false, message: 'code was wrong' });
+        if (user && user.verify === code) {
+          jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' }, function(err, token) {
+            return res.status(200).send({
+              success: true,
+              token: token,
+            });
+          });
+        } else {
+          return res.status(403).json({ success: false, message: 'code was wrong' });
+        }
       })
       .catch(err => {
         logger.logError(err);
         return res.status(500).json({ success: false, message: 'find user error' });
       });
   }
+});
+
+authRouter.post('/updatePassword', passport.authenticate('jwt', { session: false }), (req, res) => {
+  const { password } = req.body;
+  if (!password) return res.status(403).send({ success: false, message: 'this field is required' });
+  User.findOne({ email: req.user.email }).then(user => {
+    bcrypt.genSalt(10, function(err, salt) {
+      bcrypt.hash(password, salt, async function(err, hash) {
+        user.password = hash;
+        await user.save().then(() => res.json({ success: true }));
+      });
+    });
+    return res.status(200).send({ success: true });
+  });
 });
 
 authRouter.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {

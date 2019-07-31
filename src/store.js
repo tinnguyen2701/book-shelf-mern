@@ -9,6 +9,7 @@ import {
   currentUserSaga,
   verifyReducer as verify,
   verifySaga,
+  updatePasswordSaga,
 } from './components/ducks';
 
 const rootReducer = combineReducers({
@@ -17,7 +18,13 @@ const rootReducer = combineReducers({
 });
 
 export const rootSaga = function* rootSaga() {
-  yield all([...registerSaga, ...loginSaga, ...currentUserSaga, ...verifySaga]);
+  yield all([
+    ...registerSaga,
+    ...loginSaga,
+    ...currentUserSaga,
+    ...verifySaga,
+    ...updatePasswordSaga,
+  ]);
 };
 
 const sagaMiddleware = createSagaMiddleware();

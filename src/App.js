@@ -11,6 +11,7 @@ import { removeToken } from './dorothy/utils/callApi';
 import store from './store';
 import { GET_CURRENT_USER_REQUEST } from './components/ducks';
 import Verify from './components/auth/Verify';
+import RememberPassword from './components/auth/RememberPassword';
 
 export default () => {
   useEffect(() => {
@@ -38,6 +39,7 @@ export default () => {
           <Route path="/auth/login" component={Login} />
           <Route path="/auth/register" component={Register} />
           <Route path="/auth/verify" component={Verify} />
+          <Route path="/auth/rememberPassword" component={RememberPassword} />
         </Router>
       </BrowserRouter>
     </ThemeProvider>

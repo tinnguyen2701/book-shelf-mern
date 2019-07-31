@@ -22,7 +22,7 @@ const Verify = ({ isVisible, history }) => {
             value={code || ''}
             onChange={e => setCode(e.target.value)}
           />
-          {code === '' && <span>Cmail is required</span>}
+          {code === '' && <span>Code is required</span>}
         </p>
       ) : (
         <p>

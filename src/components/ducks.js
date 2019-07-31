@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
 import { callApi, createAction, createReducer, logger } from 'dorothy/utils';
 
@@ -16,6 +15,9 @@ export const GET_CURRENT_USER_ERROR = 'GET_CURRENT_USER_ERROR';
 export const VERIFY_REQUEST = 'VERIFY_REQUEST';
 export const VERIFY_RESPONSE = 'VERIFY_RESPONSE';
 export const VERIFY_ERROR = 'VERIFY_ERROR';
+
+export const UPDATE_PASSWORD_REQUEST = 'UPDATE_PASSWORD_REQUEST';
+export const UPDATE_PASSWORD_ERROR = 'UPDATE_PASSWORD_ERROR';
 
 /* handler state for register */
 function* requestRegister(action) {
@@ -106,8 +108,10 @@ function* requestVerify(action) {
       { email, code },
     );
     if (response.success) {
-      if (code) history.push('/auth/login');
-      else yield put(createAction(VERIFY_RESPONSE, response));
+      if (code) {
+        window.localStorage.setItem('JWT', response.token);
+        history.push('/auth/rememberPassword');
+      } else yield put(createAction(VERIFY_RESPONSE, email));
     }
   } catch (error) {
     yield put(createAction(VERIFY_ERROR, error));
@@ -119,7 +123,7 @@ function* watchVerifyRequest() {
 
 const initVerify = { isVisible: false };
 const verifyActionHandler = {
-  [VERIFY_RESPONSE]: (state, action) => ({
+  [VERIFY_RESPONSE]: state => ({
     ...state,
     isVisible: true,
   }),
@@ -127,3 +131,24 @@ const verifyActionHandler = {
 
 export const verifyReducer = createReducer(initVerify, verifyActionHandler);
 export const verifySaga = [fork(watchVerifyRequest)];
+
+/* handler state for update password */
+
+function* requestUpdatePassword(action) {
+  const { password, history } = action.payload;
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}api/auth/updatePassword`,
+      { password, token: window.localStorage.getItem('JWT') },
+    );
+    if (response.success) history.push('/auth/login');
+  } catch (error) {
+    yield put(createAction(UPDATE_PASSWORD_ERROR, error));
+  }
+}
+function* watchUpdatePasswordRequest() {
+  yield takeLatest(UPDATE_PASSWORD_REQUEST, requestUpdatePassword);
+}
+export const updatePasswordSaga = [fork(watchUpdatePasswordRequest)];
