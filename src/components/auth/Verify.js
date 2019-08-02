@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import store from 'store';
 import { VERIFY_REQUEST } from '../ducks';
 
-const Verify = ({ isVisible, history }) => {
+const Verify = ({ isVisible, isCheckInfo, history }) => {
   const [email, setEmail] = useState(null);
   const [code, setCode] = useState(null);
 
@@ -14,6 +14,7 @@ const Verify = ({ isVisible, history }) => {
 
   return (
     <form onSubmit={e => onSubmitHandler(e)}>
+      {isCheckInfo === false && <p>This fields was wrong!</p>}
       {isVisible ? (
         <p>
           <input
@@ -46,4 +47,5 @@ const Verify = ({ isVisible, history }) => {
 
 export default connect(state => ({
   isVisible: state.verify.isVisible,
+  isCheckInfo: state.verify.isCheckInfo,
 }))(Verify);

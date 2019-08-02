@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import store from 'store';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { LOGIN_REQUEST } from '../ducks';
 
-export default ({ history }) => {
+const Login = ({ currentUser, dispatch, history }) => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
 
   const onSubmitHandler = e => {
     e.preventDefault();
-    store.dispatch({ type: LOGIN_REQUEST, payload: { email, password, history } });
+    dispatch({ type: LOGIN_REQUEST, payload: { email, password, history } });
   };
 
   return (
     <form onSubmit={e => onSubmitHandler(e)}>
+      {currentUser === false && <p>Email or password was wrong!</p>}
       <p>
         <input
           type="email"
@@ -41,3 +42,6 @@ export default ({ history }) => {
     </form>
   );
 };
+export default connect(state => ({
+  currentUser: state.login.currentUser,
+}))(Login);

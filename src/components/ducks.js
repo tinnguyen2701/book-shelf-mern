@@ -70,7 +70,10 @@ const loginActionHandler = {
   }),
   [LOGIN_ERROR]: (state, action) => {
     logger.logError(action.payload);
-    return state;
+    return {
+      ...state,
+      currentUser: false,
+    };
   },
   [GET_CURRENT_USER_RESPONSE]: (state, action) => ({
     ...state,
@@ -121,11 +124,16 @@ function* watchVerifyRequest() {
   yield takeLatest(VERIFY_REQUEST, requestVerify);
 }
 
-const initVerify = { isVisible: false };
+const initVerify = { isVisible: false, isCheckInfoEmail: null };
 const verifyActionHandler = {
   [VERIFY_RESPONSE]: state => ({
     ...state,
     isVisible: true,
+    isCheckInfo: true,
+  }),
+  [VERIFY_ERROR]: state => ({
+    ...state,
+    isCheckInfo: false,
   }),
 };
 
