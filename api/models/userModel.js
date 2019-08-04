@@ -24,6 +24,12 @@ const userSchema = new Schema({
   verify: {
     type: String,
   },
+  favorites: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Book',
+    },
+  ],
 });
 
 module.exports = mongoose.model('User', userSchema);
