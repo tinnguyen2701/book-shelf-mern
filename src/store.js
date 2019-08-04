@@ -10,11 +10,17 @@ import {
   verifyReducer as verify,
   verifySaga,
   updatePasswordSaga,
-} from './components/ducks';
+} from './components/auth/ducks';
+import { sellReducer as sell, sellSaga } from './components/Sell/duck';
+import { booksReducer as books, booksSaga } from './components/duck';
+import { postReducer as post, postSaga } from './components/Post/ducks';
 
 const rootReducer = combineReducers({
   login,
   verify,
+  sell,
+  books,
+  post,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -24,6 +30,9 @@ export const rootSaga = function* rootSaga() {
     ...currentUserSaga,
     ...verifySaga,
     ...updatePasswordSaga,
+    ...sellSaga,
+    ...booksSaga,
+    ...postSaga,
   ]);
 };
 

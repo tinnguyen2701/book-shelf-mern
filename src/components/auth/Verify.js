@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
-import { VERIFY_REQUEST } from '../ducks';
+import { VERIFY_REQUEST } from './ducks';
 
 const Verify = ({ isVisible, isCheckInfo, history }) => {
   const [email, setEmail] = useState(null);

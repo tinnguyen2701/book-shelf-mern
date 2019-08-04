@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { LOGIN_REQUEST } from '../ducks';
+import { LOGIN_REQUEST } from './ducks';
 
 const Login = ({ currentUser, dispatch, history }) => {
   const [email, setEmail] = useState(null);
@@ -17,7 +17,7 @@ const Login = ({ currentUser, dispatch, history }) => {
       {currentUser === false && <p>Email or password was wrong!</p>}
       <p>
         <input
-          type="email"
+          type="text"
           placeholder="Email.."
           value={email || ''}
           onChange={e => setEmail(e.target.value)}

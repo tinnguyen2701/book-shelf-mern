@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import store from 'store';
-import { REGISTER_REQUEST } from '../ducks';
+import { REGISTER_REQUEST } from './ducks';
 
 export default ({ history }) => {
   const [email, setEmail] = useState(null);

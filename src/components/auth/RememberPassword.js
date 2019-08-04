@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import store from 'store';
-import { UPDATE_PASSWORD_REQUEST } from '../ducks';
+import { UPDATE_PASSWORD_REQUEST } from './ducks';
 
 export default ({ history }) => {
   const [password, setPassword] = useState(null);

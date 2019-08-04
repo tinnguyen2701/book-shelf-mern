@@ -1,5 +1,5 @@
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
-import { callApi, createAction, createReducer, logger } from 'dorothy/utils';
+import { callApi, createAction, createReducer } from 'dorothy/utils';
 
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
 export const REGISTER_ERROR = 'REGISTER_ERROR';
@@ -68,8 +68,7 @@ const loginActionHandler = {
     ...state,
     currentUser: action.payload,
   }),
-  [LOGIN_ERROR]: (state, action) => {
-    logger.logError(action.payload);
+  [LOGIN_ERROR]: state => {
     return {
       ...state,
       currentUser: false,

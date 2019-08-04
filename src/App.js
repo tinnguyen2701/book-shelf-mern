@@ -9,9 +9,11 @@ import theme from './theme';
 import Header from './components/partials/Header';
 import { removeToken } from './dorothy/utils/callApi';
 import store from './store';
-import { GET_CURRENT_USER_REQUEST } from './components/ducks';
+import { GET_CURRENT_USER_REQUEST } from './components/auth/ducks';
 import Verify from './components/auth/Verify';
 import RememberPassword from './components/auth/RememberPassword';
+import Sell from './components/Sell';
+import Post from './components/Post';
 
 export default () => {
   useEffect(() => {
@@ -28,7 +30,7 @@ export default () => {
         });
       }
     }
-  });
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -40,6 +42,8 @@ export default () => {
           <Route path="/auth/register" component={Register} />
           <Route path="/auth/verify" component={Verify} />
           <Route path="/auth/rememberPassword" component={RememberPassword} />
+          <Route path="/sell" component={Sell} />
+          <Route path="/post/:postId" component={Post} />
         </Router>
       </BrowserRouter>
     </ThemeProvider>

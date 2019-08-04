@@ -13,17 +13,19 @@ const callApi = (method, url, data = {}) => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: data.token ? `Bearer ${data.token}` : null,
+      Authorization: `Bearer ${window.localStorage.getItem('JWT')}`,
     },
     timeout: data.timeout || defaultTimeout,
     data,
   };
 
-  if (data.token) {
-    axios.defaults.headers.common.Authorization = `Bearer ${data.token}`;
-  }
-
-  axios.interceptors.response.use(response => response, error => Promise.reject(error));
+  axios.interceptors.response.use(
+    response => response,
+    error => {
+      Promise.reject(error);
+      if (error.response.status === 401) window.location.href = '/auth/login';
+    },
+  );
 
   return axios(config).then(response => {
     if (response == null) return null;

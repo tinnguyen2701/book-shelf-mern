@@ -42,6 +42,9 @@ const Header = ({ history }) => (
           Sign out
         </Link>
       </li>
+      <li>
+        <Link to="/sell">Sell</Link>
+      </li>
     </ul>
   </Div>
 );
