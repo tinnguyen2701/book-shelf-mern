@@ -24,12 +24,9 @@ const userSchema = new Schema({
   verify: {
     type: String,
   },
-  favorites: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Book',
-    },
-  ],
+  avatar: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model('User', userSchema);

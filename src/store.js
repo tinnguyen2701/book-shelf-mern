@@ -13,7 +13,13 @@ import {
 } from './components/auth/ducks';
 import { sellReducer as sell, sellSaga } from './components/Sell/duck';
 import { booksReducer as books, booksSaga } from './components/duck';
-import { postReducer as post, postSaga, favoriteSaga } from './components/Post/ducks';
+import {
+  postReducer as post,
+  postSaga,
+  favoriteSaga,
+  commentSaga,
+  deleteCommentSaga,
+} from './components/Post/ducks';
 
 const rootReducer = combineReducers({
   login,
@@ -34,6 +40,8 @@ export const rootSaga = function* rootSaga() {
     ...booksSaga,
     ...postSaga,
     ...favoriteSaga,
+    ...commentSaga,
+    ...deleteCommentSaga,
   ]);
 };
 

@@ -21,13 +21,13 @@ export const UPDATE_PASSWORD_ERROR = 'UPDATE_PASSWORD_ERROR';
 
 /* handler state for register */
 function* requestRegister(action) {
-  const { email, username, password, history } = action.payload;
+  const { email, username, password, avatar, history } = action.payload;
   try {
     const response = yield call(
       callApi,
       'POST',
       `${process.env.REACT_APP_BASE_URL}api/auth/register`,
-      { email, username, password },
+      { email, username, password, avatar },
     );
     if (response.success) history.push('/auth/login');
   } catch (error) {

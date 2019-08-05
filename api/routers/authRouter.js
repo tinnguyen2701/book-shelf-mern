@@ -10,7 +10,7 @@ const logger = require('../utils/logger');
 const User = require('../models/userModel');
 
 authRouter.post('/register', async (req, res) => {
-  const { email, username, password } = req.body;
+  const { email, username, password, avatar } = req.body;
 
   if (!email || !username || !password) {
     return res.status(403).json({ message: 'you can not register' });
@@ -24,6 +24,7 @@ authRouter.post('/register', async (req, res) => {
       const newUser = new User({
         email,
         username,
+        avatar,
         password: hash,
       });
 

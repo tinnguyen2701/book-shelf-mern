@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { POST_REQUEST, FAVORITE_REQUEST } from './ducks';
+import { POST_REQUEST, FAVORITE_REQUEST, COMMENT_REQUEST } from './ducks';
+import Comment from './Comment';
 
 const Post = ({ post, match, dispatch }) => {
   useEffect(() => {
@@ -8,12 +9,15 @@ const Post = ({ post, match, dispatch }) => {
   }, []);
 
   const [comment, setComment] = useState(null);
+
   const onClickHandler = () => {
     dispatch({ type: FAVORITE_REQUEST, payload: match.params.postId });
   };
 
   const onSubmitHandler = e => {
     e.preventDefault();
+    setComment(null);
+    dispatch({ type: COMMENT_REQUEST, payload: { postId: match.params.postId, comment } });
   };
 
   return (
@@ -37,6 +41,12 @@ const Post = ({ post, match, dispatch }) => {
             onChange={e => setComment(e.target.value)}
           />
           <button type="submit">Send</button>
+          <div>
+            {post &&
+              post.comments.map((item, index) => (
+                <Comment key={index.toString()} comment={item} postId={match.params.postId} />
+              ))}
+          </div>
         </form>
       </div>
     )

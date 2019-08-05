@@ -3,7 +3,8 @@ const bookRouter = require('express').Router();
 const passport = require('passport');
 
 const Book = require('../models/bookModel');
-const User = require('../models/userModel');
+const Comment = require('../models/commentModel');
+
 const log = require('../utils/logger');
 
 bookRouter.get('/', async (req, res) => {
@@ -19,6 +20,13 @@ bookRouter.get('/', async (req, res) => {
 
 bookRouter.get('/:postId', async (req, res) => {
   await Book.findById(req.params.postId)
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'author',
+        select: 'avatar username',
+      },
+    })
     .then(book => {
       return res.status(200).send(book);
     })
@@ -33,36 +41,83 @@ bookRouter.post(
   passport.authenticate('jwt', { session: false }),
   async (req, res) => {
     const userId = req.user._id;
-    const postId = req.params.postId;
+    const { postId } = req.params;
+
     await Book.findById(postId)
       .then(book => {
-        User.findById(userId)
-          .then(user => {
-            const match = user.favorites.indexOf(postId);
-            if (match < 0) {
-              user.favorites.push(postId);
-              user.save();
-              book.favorites.push(userId);
-              book.save();
-              return res.status(200).send({ add: true });
-            } else {
-              user.favorites.splice(match, 1);
-              user.save();
-              const matchUser = book.favorites.indexOf(userId);
-              book.favorites.splice(matchUser, 1);
-              book.save();
-              return res.status(200).send({ add: false });
-            }
-          })
-          .catch(() => {
-            log.logError('find user went wong!');
-            return res.sendStatus(500);
-          });
+        if (!book) return res.sendStatus(404);
+        const matchUser = book.favorites.indexOf(userId);
+        if (matchUser < 0) {
+          book.favorites.push(userId);
+          book.save();
+          return res.status(200).send({ add: true, userId });
+        }
+        book.favorites.splice(matchUser, 1);
+        book.save();
+        return res.status(200).send({ add: false, userId });
       })
       .catch(() => {
         log.logError('find book went wong!');
         return res.sendStatus(500);
       });
+  },
+);
+
+bookRouter.post(
+  '/comments/:postId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { comment } = req.body;
+
+    const newComment = new Comment({
+      body: comment,
+    });
+    newComment.author = req.user._id;
+
+    await newComment.save().then(response =>
+      response
+        .populate({
+          path: 'author',
+          select: 'username avatar',
+        })
+        .execPopulate()
+        .then(result => {
+          Book.findById(req.params.postId)
+            .then(book => {
+              if (!book) return res.sendStatus(404);
+              book.comments.push(result._id);
+              book.save();
+              return res.status(200).send(result);
+            })
+            .catch(() => {
+              log.logError('find book went wrong!');
+              return res.statusCode(500);
+            });
+        })
+        .catch(() => {
+          log.logError('save comment went wrong!');
+          return res.statusCode(500);
+        }),
+    );
+    // await newComment
+    //   .save()
+    //   .then(result => {
+    //     Book.findById(req.params.postId)
+    //       .then(book => {
+    //         if (!book) return res.sendStatus(404);
+    //         book.comments.push(result._id);
+    //         book.save();
+    //         return res.status(200).send(result);
+    //       })
+    //       .catch(() => {
+    //         log.logError('find book went wrong!');
+    //         return res.statusCode(500);
+    //       });
+    //   })
+    //   .catch(() => {
+    //     log.logError('save comment went wrong!');
+    //     return res.statusCode(500);
+    //   });
   },
 );
 

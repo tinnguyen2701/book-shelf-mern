@@ -7,10 +7,14 @@ export default ({ history }) => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [confirm, setConfirm] = useState(null);
+  const [avatar, setAvatar] = useState(null);
 
   const onSubmitHandler = e => {
     e.preventDefault();
-    store.dispatch({ type: REGISTER_REQUEST, payload: { email, username, password, history } });
+    store.dispatch({
+      type: REGISTER_REQUEST,
+      payload: { email, username, password, avatar, history },
+    });
   };
 
   return (
@@ -52,7 +56,19 @@ export default ({ history }) => {
         {confirm === '' && <span>Confirm password is required</span>}
       </p>
       <p>
-        <button type="submit" disabled={!email || !username || !password || confirm !== password}>
+        <input
+          type="text"
+          placeholder="Avatar.."
+          value={avatar || ''}
+          onChange={e => setAvatar(e.target.value)}
+        />
+        {avatar === '' && <span>Avatar is required</span>}
+      </p>
+      <p>
+        <button
+          type="submit"
+          disabled={!email || !username || !password || confirm !== password || !avatar}
+        >
           Submit
         </button>
       </p>
