@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: "off" */
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
 import { callApi, createAction, createReducer } from 'dorothy/utils';
 
@@ -53,6 +54,7 @@ const postActionHandler = {
       ...state,
     };
   },
+  [DELETE_COMMENT_RESPONSE]: (state, action) => {},
 };
 
 export const postReducer = createReducer(initPost, postActionHandler);
@@ -99,13 +101,14 @@ export const commentSaga = [fork(watchCommentRequest)];
 /* handler state for delete comments */
 function* requestDeleteComment(action) {
   try {
-    yield call(
+    const response = yield call(
       callApi,
       'POST',
       `${process.env.REACT_APP_BASE_URL}books/${action.payload.postId}/comments/delete/${
         action.payload.commentId
       }`,
     );
+    yield put(createAction(DELETE_COMMENT_RESPONSE, response));
   } catch (error) {
     yield put(createAction(DELETE_COMMENT_ERROR, error));
   }

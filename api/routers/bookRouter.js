@@ -99,25 +99,33 @@ bookRouter.post(
           return res.statusCode(500);
         }),
     );
-    // await newComment
-    //   .save()
-    //   .then(result => {
-    //     Book.findById(req.params.postId)
-    //       .then(book => {
-    //         if (!book) return res.sendStatus(404);
-    //         book.comments.push(result._id);
-    //         book.save();
-    //         return res.status(200).send(result);
-    //       })
-    //       .catch(() => {
-    //         log.logError('find book went wrong!');
-    //         return res.statusCode(500);
-    //       });
-    //   })
-    //   .catch(() => {
-    //     log.logError('save comment went wrong!');
-    //     return res.statusCode(500);
-    //   });
+  },
+);
+
+bookRouter.post(
+  '/:postId/comments/delete/:commentId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { postId, commentId } = req.params;
+    await Comment.findById(commentId)
+      .then(comment => {
+        if (!comment) {
+          log.logError('not found comment');
+          return res.statusCode(403);
+        }
+        if (!comment.author.equals(req.user._id)) return res.statusCode(404);
+        Book.findById(postId).then(book => {
+          const matchComment = book.comments.indexOf(commentId);
+          book.comments.splice(matchComment, 1);
+          book.save();
+          comment.remove();
+        });
+        return res.status(200).send(commentId);
+      })
+      .catch(() => {
+        log.logError('find comment went wrong!');
+        return res.statusCode(500);
+      });
   },
 );
 
