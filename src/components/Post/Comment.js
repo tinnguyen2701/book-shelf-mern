@@ -5,8 +5,9 @@ import store from 'store';
 import { DELETE_COMMENT_REQUEST, EDIT_COMMENT_REQUEST } from './ducks';
 
 const Comment = ({ comment, postId, currentUser }) => {
+  const { body } = comment;
   const [isVisible, setVisible] = useState(false);
-  const [text, setText] = useState((comment && comment.body) || null);
+  const [text, setText] = useState(body || null);
 
   const onDeleteHandler = () => {
     store.dispatch({ type: DELETE_COMMENT_REQUEST, payload: { postId, commentId: comment._id } });
@@ -24,14 +25,13 @@ const Comment = ({ comment, postId, currentUser }) => {
   return (
     <div>
       <p>
-        {comment && comment.author && comment.author.avatar}{' '}
-        {comment && comment.author && comment.author.username}
+        {comment.author.avatar} {comment.author.username}
       </p>
       {comment && !isVisible ? (
-        <p>{comment.body}</p>
+        <p>{body}</p>
       ) : (
         <form onSubmit={e => onEditHandler(e)}>
-          <input type="text" value={text || comment.body} onChange={e => setText(e.target.value)} />
+          <input type="text" value={text || body} onChange={e => setText(e.target.value)} />
           <button type="submit">Update</button>
           <button type="button" onClick={() => setVisible(false)}>
             Close
