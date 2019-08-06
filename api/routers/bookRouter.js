@@ -129,4 +129,28 @@ bookRouter.post(
   },
 );
 
+bookRouter.post(
+  '/:postId/comments/edit/:commentId',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { commentId } = req.params;
+    const { text } = req.body;
+    await Comment.findById(commentId)
+      .then(comment => {
+        if (!comment) {
+          log.logError('not found comment');
+          return res.statusCode(403);
+        }
+        if (!comment.author.equals(req.user._id)) return res.statusCode(404);
+
+        comment.body = text;
+        comment.save();
+        return res.status(200).send({ commentId, text });
+      })
+      .catch(() => {
+        log.logError('find comment went wrong!');
+        return res.statusCode(500);
+      });
+  },
+);
 module.exports = bookRouter;

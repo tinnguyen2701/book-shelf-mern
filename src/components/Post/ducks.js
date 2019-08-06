@@ -1,4 +1,5 @@
 /* eslint no-underscore-dangle: "off" */
+/* eslint no-param-reassign: "error" */
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
 import { callApi, createAction, createReducer } from 'dorothy/utils';
 
@@ -17,6 +18,10 @@ export const COMMENT_ERROR = 'COMMENT_ERROR';
 export const DELETE_COMMENT_REQUEST = 'DELETE_COMMENT_REQUEST';
 export const DELETE_COMMENT_RESPONSE = 'DELETE_COMMENT_RESPONSE';
 export const DELETE_COMMENT_ERROR = 'DELETE_COMMENT_ERROR';
+
+export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST';
+export const EDIT_COMMENT_RESPONSE = 'EDIT_COMMENT_RESPONSE';
+export const EDIT_COMMENT_ERROR = 'EDIT_COMMENT_ERROR';
 
 /* handler state for get post */
 function* requestPost(action) {
@@ -54,7 +59,23 @@ const postActionHandler = {
       ...state,
     };
   },
-  [DELETE_COMMENT_RESPONSE]: (state, action) => {},
+  [DELETE_COMMENT_RESPONSE]: (state, action) => {
+    const comments = state.comments.filter(comment => comment._id !== action.payload);
+    return {
+      ...state,
+      comments,
+    };
+  },
+  [EDIT_COMMENT_RESPONSE]: (state, action) => {
+    const comments = state.comments.filter(comment => {
+      if (comment._id === action.payload.commentId) comment.body = action.payload.text;
+      return comment;
+    });
+    return {
+      ...state,
+      comments,
+    };
+  },
 };
 
 export const postReducer = createReducer(initPost, postActionHandler);
@@ -117,3 +138,24 @@ function* watchDeleteCommentRequest() {
   yield takeLatest(DELETE_COMMENT_REQUEST, requestDeleteComment);
 }
 export const deleteCommentSaga = [fork(watchDeleteCommentRequest)];
+
+/* handler state for edit comments */
+function* requestEditComment(action) {
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}books/${action.payload.postId}/comments/edit/${
+        action.payload.commentId
+      }`,
+      { text: action.payload.text },
+    );
+    yield put(createAction(EDIT_COMMENT_RESPONSE, response));
+  } catch (error) {
+    yield put(createAction(EDIT_COMMENT_ERROR, error));
+  }
+}
+function* watchEditCommentRequest() {
+  yield takeLatest(EDIT_COMMENT_REQUEST, requestEditComment);
+}
+export const editCommentSaga = [fork(watchEditCommentRequest)];

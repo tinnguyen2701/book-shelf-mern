@@ -19,6 +19,7 @@ import {
   favoriteSaga,
   commentSaga,
   deleteCommentSaga,
+  editCommentSaga,
 } from './components/Post/ducks';
 
 const rootReducer = combineReducers({
@@ -42,6 +43,7 @@ export const rootSaga = function* rootSaga() {
     ...favoriteSaga,
     ...commentSaga,
     ...deleteCommentSaga,
+    ...editCommentSaga,
   ]);
 };
 

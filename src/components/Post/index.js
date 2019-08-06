@@ -41,13 +41,13 @@ const Post = ({ post, match, dispatch }) => {
             onChange={e => setComment(e.target.value)}
           />
           <button type="submit">Send</button>
-          <div>
-            {post &&
-              post.comments.map((item, index) => (
-                <Comment key={index.toString()} comment={item} postId={match.params.postId} />
-              ))}
-          </div>
         </form>
+        <div>
+          {post &&
+            post.comments.map((item, index) => (
+              <Comment key={index.toString()} comment={item} postId={match.params.postId} />
+            ))}
+        </div>
       </div>
     )
   );
