@@ -28,7 +28,7 @@ const Comment = ({ comment, postId, currentUser }) => {
         {comment && comment.author && comment.author.username}
       </p>
       {comment && !isVisible ? (
-        <p>{text || comment.body}</p>
+        <p>{comment.body}</p>
       ) : (
         <form onSubmit={e => onEditHandler(e)}>
           <input type="text" value={text || comment.body} onChange={e => setText(e.target.value)} />

@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: "off" */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { POST_REQUEST, FAVORITE_REQUEST, COMMENT_REQUEST } from './ducks';
@@ -34,18 +35,15 @@ const Post = ({ post, match, dispatch }) => {
           Like
         </button>
         <form onSubmit={e => onSubmitHandler(e)}>
-          <textarea
-            cols="10"
-            rows="3"
-            value={comment || ''}
-            onChange={e => setComment(e.target.value)}
-          />
-          <button type="submit">Send</button>
+          <input type="text" value={comment || ''} onChange={e => setComment(e.target.value)} />
+          <button disabled={!comment} type="submit">
+            Send
+          </button>
         </form>
         <div>
           {post &&
-            post.comments.map((item, index) => (
-              <Comment key={index.toString()} comment={item} postId={match.params.postId} />
+            post.comments.map(item => (
+              <Comment key={item.body} comment={item} postId={match.params.postId} />
             ))}
         </div>
       </div>

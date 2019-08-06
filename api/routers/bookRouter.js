@@ -69,6 +69,8 @@ bookRouter.post(
   async (req, res) => {
     const { comment } = req.body;
 
+    if (!comment) res.sendStatus(204);
+
     const newComment = new Comment({
       body: comment,
     });
