@@ -27,6 +27,12 @@ const userSchema = new Schema({
   avatar: {
     type: String,
   },
+  carts: [
+    {
+      bookId: String,
+      amount: Number,
+    },
+  ],
 });
 
 module.exports = mongoose.model('User', userSchema);

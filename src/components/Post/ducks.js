@@ -23,6 +23,10 @@ export const EDIT_COMMENT_REQUEST = 'EDIT_COMMENT_REQUEST';
 export const EDIT_COMMENT_RESPONSE = 'EDIT_COMMENT_RESPONSE';
 export const EDIT_COMMENT_ERROR = 'EDIT_COMMENT_ERROR';
 
+export const UPDATE_CART_REQUEST = 'UPDATE_CART_REQUEST';
+export const UPDATE_CART_RESPONSE = 'UPDATE_CART_RESPONSE';
+export const UPDATE_CART_ERROR = 'UPDATE_CART_ERROR';
+
 /* handler state for get post */
 function* requestPost(action) {
   try {
@@ -159,3 +163,20 @@ function* watchEditCommentRequest() {
   yield takeLatest(EDIT_COMMENT_REQUEST, requestEditComment);
 }
 export const editCommentSaga = [fork(watchEditCommentRequest)];
+
+/* handler state for cart */
+function* requestUpdateCart(action) {
+  try {
+    // kiem tra use da dang nhap hay chua de thuc hien block nay
+    const response = yield call(callApi, 'POST', `${process.env.REACT_APP_BASE_URL}addToCart`, {
+      carts: [action.payload],
+    });
+    yield put(createAction(UPDATE_CART_RESPONSE, response));
+  } catch (error) {
+    yield put(createAction(UPDATE_CART_ERROR, error));
+  }
+}
+function* watchAddToCartRequest() {
+  yield takeLatest(UPDATE_CART_REQUEST, requestUpdateCart);
+}
+export const addToCartSaga = [fork(watchAddToCartRequest)];
