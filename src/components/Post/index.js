@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import productLocal from 'utils/productLocal';
-import { POST_REQUEST, FAVORITE_REQUEST, COMMENT_REQUEST } from './ducks';
+import { POST_REQUEST, FAVORITE_REQUEST, COMMENT_REQUEST, UPDATE_CART_REQUEST } from './ducks';
 import Comment from './Comment';
 
-const Post = ({ post, match, dispatch }) => {
+const Post = ({ post, match, isAuthenticate, dispatch }) => {
   const { postId } = match.params;
 
   useEffect(() => {
@@ -20,7 +20,11 @@ const Post = ({ post, match, dispatch }) => {
   };
 
   const onAddToCardHandler = () => {
-    productLocal(postId, amount);
+    if (isAuthenticate) {
+      dispatch({ type: UPDATE_CART_REQUEST, payload: [{ bookId: postId, amount }] });
+    } else {
+      productLocal(postId, amount);
+    }
   };
 
   const onSubmitHandler = e => {
@@ -73,4 +77,5 @@ const Post = ({ post, match, dispatch }) => {
 
 export default connect(state => ({
   post: state.post,
+  isAuthenticate: state.login.currentUser,
 }))(Post);

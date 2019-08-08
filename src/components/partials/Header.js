@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
-// import store from 'store';
+import { connect } from 'react-redux';
 import { removeToken } from 'dorothy/utils/callApi';
+import { createAction } from 'dorothy/utils';
+import { SIGN_OUT } from '../auth/ducks';
 
 const Div = styled.div`
   > ul {
@@ -19,17 +21,12 @@ const Div = styled.div`
   }
 `;
 
-const Header = ({ history }) => {
-  // useEffect(() => {
-  //   if(window.localStorage.getItem('carts')){
-  //     store.dispatch({type: UPDATE_CART_REQUEST, payload: window.localStorage.getItem('carts')} )
-  //   }
-  // }, [])
-
+const Header = ({ history, currentUser, dispatch }) => {
   const onClickHandler = e => {
     e.preventDefault();
     window.localStorage.removeItem('JWT');
     removeToken();
+    dispatch(createAction(SIGN_OUT));
     history.push('/auth/login');
   };
 
@@ -47,7 +44,7 @@ const Header = ({ history }) => {
         </li>
         <li>
           <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
-            Your cart (.)
+            Your cart ({currentUser && currentUser.carts.length})
           </Link>
         </li>
         <li>
@@ -63,4 +60,8 @@ const Header = ({ history }) => {
   );
 };
 
-export default withRouter(Header);
+export default withRouter(
+  connect(state => ({
+    currentUser: state.login.currentUser,
+  }))(Header),
+);

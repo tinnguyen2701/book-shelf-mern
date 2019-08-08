@@ -7,6 +7,7 @@ const passport = require('passport');
 const authRouter = require('./routers/authRouter');
 const sellRouter = require('./routers/sellRouter');
 const bookRouter = require('./routers/bookRouter');
+const cartRouter = require('./routers/cartRouter');
 
 // init app
 const app = express();
@@ -28,6 +29,7 @@ require('./config/passport')(passport);
 // router
 app.use('/api/auth', authRouter);
 app.use('/sell', passport.authenticate('jwt', { session: false }), sellRouter);
+app.use('/addToCart', passport.authenticate('jwt', { session: false }), cartRouter);
 app.use('/books', bookRouter);
 
 // start server

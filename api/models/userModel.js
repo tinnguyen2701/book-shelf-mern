@@ -29,7 +29,10 @@ const userSchema = new Schema({
   },
   carts: [
     {
-      bookId: String,
+      bookId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Book',
+      },
       amount: Number,
     },
   ],

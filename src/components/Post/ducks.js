@@ -167,9 +167,8 @@ export const editCommentSaga = [fork(watchEditCommentRequest)];
 /* handler state for cart */
 function* requestUpdateCart(action) {
   try {
-    // kiem tra use da dang nhap hay chua de thuc hien block nay
     const response = yield call(callApi, 'POST', `${process.env.REACT_APP_BASE_URL}addToCart`, {
-      carts: [action.payload],
+      carts: action.payload,
     });
     yield put(createAction(UPDATE_CART_RESPONSE, response));
   } catch (error) {
@@ -179,4 +178,14 @@ function* requestUpdateCart(action) {
 function* watchAddToCartRequest() {
   yield takeLatest(UPDATE_CART_REQUEST, requestUpdateCart);
 }
+
+export const addToCartActionHandler = {
+  [UPDATE_CART_RESPONSE]: (state, action) => ({
+    ...state,
+    currentUser: {
+      ...state.currentUser,
+      carts: action.payload,
+    },
+  }),
+};
 export const addToCartSaga = [fork(watchAddToCartRequest)];

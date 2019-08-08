@@ -1,5 +1,6 @@
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
 import { callApi, createAction, createReducer } from 'dorothy/utils';
+import { addToCartActionHandler, UPDATE_CART_REQUEST } from '../Post/ducks';
 
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
 export const REGISTER_ERROR = 'REGISTER_ERROR';
@@ -18,6 +19,8 @@ export const VERIFY_ERROR = 'VERIFY_ERROR';
 
 export const UPDATE_PASSWORD_REQUEST = 'UPDATE_PASSWORD_REQUEST';
 export const UPDATE_PASSWORD_ERROR = 'UPDATE_PASSWORD_ERROR';
+
+export const SIGN_OUT = 'SIGN_OUT';
 
 /* handler state for register */
 function* requestRegister(action) {
@@ -51,9 +54,16 @@ function* requestLogin(action) {
       `${process.env.REACT_APP_BASE_URL}api/auth/login`,
       { email, password },
     );
-    yield put(createAction(LOGIN_RESPONSE, response.currentUser));
-    window.localStorage.setItem('JWT', response.token);
-    history.push('/');
+    if (response.success) {
+      yield put(createAction(LOGIN_RESPONSE, response.currentUser));
+      window.localStorage.setItem('JWT', response.token);
+      history.push('/');
+      yield put({
+        type: UPDATE_CART_REQUEST,
+        payload: JSON.parse(window.localStorage.getItem('carts')),
+      });
+      window.localStorage.removeItem('carts');
+    }
   } catch (error) {
     yield put(createAction(LOGIN_ERROR, error));
   }
@@ -78,6 +88,12 @@ const loginActionHandler = {
     ...state,
     currentUser: action.payload,
   }),
+  [SIGN_OUT]: state => ({
+    ...state,
+    isAuthenticate: false,
+    currentUser: null,
+  }),
+  ...addToCartActionHandler,
 };
 
 export const loginReducer = createReducer(initLogin, loginActionHandler);
