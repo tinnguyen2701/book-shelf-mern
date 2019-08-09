@@ -57,12 +57,14 @@ function* requestLogin(action) {
     if (response.success) {
       yield put(createAction(LOGIN_RESPONSE, response.currentUser));
       window.localStorage.setItem('JWT', response.token);
+      if (window.localStorage.getItem('carts')) {
+        yield put({
+          type: UPDATE_CART_REQUEST,
+          payload: JSON.parse(window.localStorage.getItem('carts')),
+        });
+        window.localStorage.removeItem('carts');
+      }
       history.push('/');
-      yield put({
-        type: UPDATE_CART_REQUEST,
-        payload: JSON.parse(window.localStorage.getItem('carts')),
-      });
-      window.localStorage.removeItem('carts');
     }
   } catch (error) {
     yield put(createAction(LOGIN_ERROR, error));

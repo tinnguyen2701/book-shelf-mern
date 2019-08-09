@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { removeToken } from 'dorothy/utils/callApi';
 import { createAction } from 'dorothy/utils';
 import { SIGN_OUT } from '../auth/ducks';
+import { UPDATE_CART } from '../duck';
 
 const Div = styled.div`
   > ul {
@@ -21,12 +22,13 @@ const Div = styled.div`
   }
 `;
 
-const Header = ({ history, currentUser, dispatch }) => {
+const Header = ({ history, currentUser, carts, dispatch }) => {
   const onClickHandler = e => {
     e.preventDefault();
     window.localStorage.removeItem('JWT');
     removeToken();
     dispatch(createAction(SIGN_OUT));
+    dispatch(createAction(UPDATE_CART, []));
     history.push('/auth/login');
   };
 
@@ -43,18 +45,22 @@ const Header = ({ history, currentUser, dispatch }) => {
           <Link to="/auth/register">Register</Link>
         </li>
         <li>
-          <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
-            Your cart ({currentUser && currentUser.carts.length})
+          <Link to="/carts">
+            Your cart ({currentUser ? currentUser.carts.length : carts.length})
           </Link>
         </li>
-        <li>
-          <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
-            Sign out
-          </Link>
-        </li>
-        <li>
-          <Link to="/sell">Sell</Link>
-        </li>
+        {currentUser && (
+          <li>
+            <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
+              Sign out
+            </Link>
+          </li>
+        )}
+        {currentUser && (
+          <li>
+            <Link to="/sell">Sell</Link>
+          </li>
+        )}
       </ul>
     </Div>
   );
@@ -63,5 +69,6 @@ const Header = ({ history, currentUser, dispatch }) => {
 export default withRouter(
   connect(state => ({
     currentUser: state.login.currentUser,
+    carts: state.books.carts,
   }))(Header),
 );

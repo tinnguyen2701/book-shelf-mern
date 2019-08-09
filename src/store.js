@@ -22,6 +22,7 @@ import {
   editCommentSaga,
   addToCartSaga,
 } from './components/Post/ducks';
+import { cartReducer as cart, getCartSaga } from './components/Cart/ducks';
 
 const rootReducer = combineReducers({
   login,
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   sell,
   books,
   post,
+  cart,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -46,6 +48,7 @@ export const rootSaga = function* rootSaga() {
     ...deleteCommentSaga,
     ...editCommentSaga,
     ...addToCartSaga,
+    ...getCartSaga,
   ]);
 };
 

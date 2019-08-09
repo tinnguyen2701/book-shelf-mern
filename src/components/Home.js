@@ -35,5 +35,5 @@ const Home = ({ books, dispatch, history }) => {
 };
 
 export default connect(state => ({
-  books: state.books,
+  books: state.books.books,
 }))(Home);

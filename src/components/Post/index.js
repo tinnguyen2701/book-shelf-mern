@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import productLocal from 'utils/productLocal';
+import { createAction } from 'dorothy/utils';
 import { POST_REQUEST, FAVORITE_REQUEST, COMMENT_REQUEST, UPDATE_CART_REQUEST } from './ducks';
 import Comment from './Comment';
+import { UPDATE_CART } from '../duck';
 
 const Post = ({ post, match, isAuthenticate, dispatch }) => {
   const { postId } = match.params;
@@ -24,6 +26,7 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
       dispatch({ type: UPDATE_CART_REQUEST, payload: [{ bookId: postId, amount }] });
     } else {
       productLocal(postId, amount);
+      dispatch(createAction(UPDATE_CART, JSON.parse(window.localStorage.getItem('carts'))));
     }
   };
 

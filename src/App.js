@@ -2,18 +2,21 @@ import React, { useEffect } from 'react';
 import jwtDecode from 'jwt-decode';
 import { BrowserRouter, Switch as Router, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
+import { createAction } from 'dorothy/utils';
+import { removeToken } from 'dorothy/utils/callApi';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import Home from './components/Home';
 import theme from './theme';
 import Header from './components/partials/Header';
-import { removeToken } from './dorothy/utils/callApi';
 import store from './store';
 import { GET_CURRENT_USER_REQUEST } from './components/auth/ducks';
 import Verify from './components/auth/Verify';
 import RememberPassword from './components/auth/RememberPassword';
 import Sell from './components/Sell';
 import Post from './components/Post';
+import { UPDATE_CART } from './components/duck';
+import Cart from './components/Cart';
 
 export default () => {
   useEffect(() => {
@@ -30,6 +33,9 @@ export default () => {
         });
       }
     }
+    if (window.localStorage.getItem('carts')) {
+      store.dispatch(createAction(UPDATE_CART, JSON.parse(window.localStorage.getItem('carts'))));
+    }
   }, []);
 
   return (
@@ -44,6 +50,7 @@ export default () => {
           <Route path="/auth/rememberPassword" component={RememberPassword} />
           <Route path="/sell" component={Sell} />
           <Route path="/post/:postId" component={Post} />
+          <Route path="/carts" component={Cart} />
         </Router>
       </BrowserRouter>
     </ThemeProvider>
