@@ -29,7 +29,7 @@ require('./config/passport')(passport);
 // router
 app.use('/api/auth', authRouter);
 app.use('/sell', passport.authenticate('jwt', { session: false }), sellRouter);
-app.use('/addToCart', passport.authenticate('jwt', { session: false }), cartRouter);
+app.use('/carts', passport.authenticate('jwt', { session: false }), cartRouter);
 app.use('/books', bookRouter);
 
 // start server

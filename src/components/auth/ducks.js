@@ -1,6 +1,7 @@
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
 import { callApi, createAction, createReducer } from 'dorothy/utils';
 import { addToCartActionHandler, UPDATE_CART_REQUEST } from '../Post/ducks';
+import { deleteCartActionHandler } from '../Cart/ducks';
 
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
 export const REGISTER_ERROR = 'REGISTER_ERROR';
@@ -96,6 +97,7 @@ const loginActionHandler = {
     currentUser: null,
   }),
   ...addToCartActionHandler,
+  ...deleteCartActionHandler,
 };
 
 export const loginReducer = createReducer(initLogin, loginActionHandler);

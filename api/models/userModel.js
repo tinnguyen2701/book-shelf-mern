@@ -34,6 +34,8 @@ const userSchema = new Schema({
         ref: 'Book',
       },
       amount: Number,
+      title: String,
+      poster: String,
     },
   ],
 });

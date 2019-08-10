@@ -1,26 +1,33 @@
 /* eslint no-underscore-dangle: "off" */
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
 import store from 'store';
-import { GET_CART_REQUEST } from './ducks';
+import { DELETE_CART_REQUEST } from './ducks';
 
-const CartItem = ({ cart, book }) => {
-  useEffect(() => {
-    console.log('t d t');
-    store.dispatch({ type: GET_CART_REQUEST, payload: cart.bookId });
-  }, []);
+export default ({ cart }) => {
+  const [amount, setAmount] = useState(cart.amount);
+
+  const onDeleteItem = () => {
+    store.dispatch({ type: DELETE_CART_REQUEST, payload: cart._id });
+  };
 
   return (
     <div>
-      <p>anh: {book && book.poster}</p>
-      <p>title: {book && book.title}</p>
-      <p>amount: {cart.amount}</p>
+      <p>anh: {cart.poster}</p>
+      <p>title: {cart.title}</p>
+      <p>
+        amount: {amount}
+        <button type="button" onClick={() => setAmount(amount + 1)}>
+          +
+        </button>
+        <button type="button" onClick={() => amount > 1 && setAmount(amount - 1)}>
+          -
+        </button>
+        <button type="button" onClick={() => onDeleteItem()}>
+          X
+        </button>
+      </p>
       <hr />
       <br />
     </div>
   );
 };
-
-export default connect(state => ({
-  book: state.cart,
-}))(CartItem);

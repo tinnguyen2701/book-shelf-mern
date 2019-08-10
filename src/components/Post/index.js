@@ -23,9 +23,12 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
 
   const onAddToCardHandler = () => {
     if (isAuthenticate) {
-      dispatch({ type: UPDATE_CART_REQUEST, payload: [{ bookId: postId, amount }] });
+      dispatch({
+        type: UPDATE_CART_REQUEST,
+        payload: [{ bookId: postId, amount, title: post.title, poster: post.poster }],
+      });
     } else {
-      productLocal(postId, amount);
+      productLocal(postId, amount, post.title, post.poster);
       dispatch(createAction(UPDATE_CART, JSON.parse(window.localStorage.getItem('carts'))));
     }
   };

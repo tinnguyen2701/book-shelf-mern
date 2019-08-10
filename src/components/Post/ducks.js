@@ -167,7 +167,7 @@ export const editCommentSaga = [fork(watchEditCommentRequest)];
 /* handler state for cart */
 function* requestUpdateCart(action) {
   try {
-    const response = yield call(callApi, 'POST', `${process.env.REACT_APP_BASE_URL}addToCart`, {
+    const response = yield call(callApi, 'POST', `${process.env.REACT_APP_BASE_URL}carts`, {
       carts: action.payload,
     });
     yield put(createAction(UPDATE_CART_RESPONSE, response));

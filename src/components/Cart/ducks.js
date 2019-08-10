@@ -1,35 +1,31 @@
-import { fork, put, call, takeEvery, delay } from 'redux-saga/effects';
-import { callApi, createAction, createReducer } from 'dorothy/utils';
+import { fork, put, call, takeLatest } from 'redux-saga/effects';
+import { callApi, createAction } from 'dorothy/utils';
 
-export const GET_CART_REQUEST = 'GET_CART_REQUEST';
-export const GET_CART_RESPONSE = 'GET_CART_RESPONSE';
-export const GET_CART_ERROR = 'GET_CART_ERROR';
+export const DELETE_CART_REQUEST = 'DELETE_CART_REQUEST';
+export const DELETE_CART_RESPONSE = 'DELETE_CART_RESPONSE';
+export const DELETE_CART_ERROR = 'DELETE_CART_ERROR';
 
-function* requestCart(action) {
+function* requestDeleteCart(action) {
   try {
-    const response = yield call(
-      callApi,
-      'GET',
-      `${process.env.REACT_APP_BASE_URL}books/${action.payload}`,
-    );
-    yield delay(2000);
-    yield put(createAction(GET_CART_RESPONSE, response));
+    const response = yield call(callApi, 'POST', `${process.env.REACT_APP_BASE_URL}carts/delete`, {
+      cartId: action.payload,
+    });
+    console.log(response);
+    // yield put(createAction(DELETE_CART_RESPONSE, response));
   } catch (error) {
-    yield put(createAction(GET_CART_ERROR, error));
+    yield put(createAction(DELETE_CART_ERROR, error));
   }
 }
-function* watchGetCartRequest() {
-  yield takeEvery(GET_CART_REQUEST, requestCart);
+function* watchDeleteCartRequest() {
+  yield takeLatest(DELETE_CART_REQUEST, requestDeleteCart);
 }
-
-const initBook = null;
-const cartActionHandler = {
-  [GET_CART_RESPONSE]: null,
-  [GET_CART_RESPONSE]: (state, action) => {
-    console.log(action.payload);
-    return action.payload;
-  },
+export const deleteCartActionHandler = {
+  [DELETE_CART_RESPONSE]: (state, action) => ({
+    ...state,
+    currentUser: {
+      ...state.currentUser,
+      carts: action.payload,
+    },
+  }),
 };
-
-export const cartReducer = createReducer(initBook, cartActionHandler);
-export const getCartSaga = [fork(watchGetCartRequest)];
+export const deleteCartSaga = [fork(watchDeleteCartRequest)];
