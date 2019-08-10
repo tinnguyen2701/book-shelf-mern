@@ -17,7 +17,7 @@ const Div = styled.div`
   }
 `;
 
-const Home = ({ books, dispatch, history }) => {
+const Home = ({ books, currentUser, dispatch, history }) => {
   useEffect(() => {
     dispatch({ type: BOOKS_REQUEST });
   }, []);
@@ -27,7 +27,7 @@ const Home = ({ books, dispatch, history }) => {
       <div>category</div>
       <div>
         {books.map((book, index) => (
-          <Book key={index.toString()} history={history} book={book} />
+          <Book key={index.toString()} history={history} book={book} isAuthenticate={currentUser} />
         ))}
       </div>
     </Div>
@@ -36,4 +36,5 @@ const Home = ({ books, dispatch, history }) => {
 
 export default connect(state => ({
   books: state.books.books,
+  currentUser: state.login.currentUser,
 }))(Home);

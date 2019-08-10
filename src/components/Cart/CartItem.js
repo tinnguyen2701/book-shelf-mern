@@ -35,6 +35,7 @@ export default ({ cart, isAuthenticate }) => {
           <button type="button" onClick={() => onDeleteItem()}>
             X
           </button>
+          <button type="button">Add</button>
         </p>
         <hr />
         <br />

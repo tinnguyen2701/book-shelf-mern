@@ -13,6 +13,8 @@ const Cart = ({ currentUser }) => (
       JSON.parse(window.localStorage.getItem('carts')).map(cart => (
         <CartItem key={cart.title} cart={cart} isAuthenticate={false} />
       ))}
+
+    <div>book</div>
   </div>
 );
 
