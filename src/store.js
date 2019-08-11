@@ -22,7 +22,7 @@ import {
   editCommentSaga,
   addToCartSaga,
 } from './components/Post/ducks';
-import { deleteCartSaga } from './components/Cart/ducks';
+import { deleteCartSaga, addOrderSaga, deleteOrderSaga } from './components/Cart/ducks';
 
 const rootReducer = combineReducers({
   login,
@@ -48,6 +48,8 @@ export const rootSaga = function* rootSaga() {
     ...editCommentSaga,
     ...addToCartSaga,
     ...deleteCartSaga,
+    ...addOrderSaga,
+    ...deleteOrderSaga,
   ]);
 };
 

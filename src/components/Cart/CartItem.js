@@ -1,9 +1,10 @@
 /* eslint no-underscore-dangle: "off" */
 import React, { useState } from 'react';
+import { withRouter } from 'react-router-dom';
 import store from 'store';
-import { DELETE_CART_REQUEST } from './ducks';
+import { DELETE_CART_REQUEST, ADD_ORDER_REQUEST } from './ducks';
 
-export default ({ cart, isAuthenticate }) => {
+const CartItem = ({ cart, isAuthenticate, history }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [amount, setAmount] = useState(cart.amount);
 
@@ -19,11 +20,20 @@ export default ({ cart, isAuthenticate }) => {
     }
   };
 
+  const onAddOrder = () => {
+    if (isAuthenticate) {
+      store.dispatch({ type: ADD_ORDER_REQUEST, payload: { cart, amount } });
+    } else {
+      history.push('/auth/login');
+    }
+  };
+
   return (
     isVisible && (
       <div>
         <p>anh: {cart.poster}</p>
         <p>title: {cart.title}</p>
+        <p>money: {cart.money}</p>
         <p>
           amount: {amount}
           <button type="button" onClick={() => setAmount(amount + 1)}>
@@ -35,7 +45,9 @@ export default ({ cart, isAuthenticate }) => {
           <button type="button" onClick={() => onDeleteItem()}>
             X
           </button>
-          <button type="button">Add</button>
+          <button type="button" onClick={() => onAddOrder()}>
+            Add
+          </button>
         </p>
         <hr />
         <br />
@@ -43,3 +55,5 @@ export default ({ cart, isAuthenticate }) => {
     )
   );
 };
+
+export default withRouter(CartItem);

@@ -25,10 +25,12 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
     if (isAuthenticate) {
       dispatch({
         type: UPDATE_CART_REQUEST,
-        payload: [{ bookId: postId, amount, title: post.title, poster: post.poster }],
+        payload: [
+          { bookId: postId, money: post.money, amount, title: post.title, poster: post.poster },
+        ],
       });
     } else {
-      productLocal(postId, amount, post.title, post.poster);
+      productLocal(postId, post.money, amount, post.title, post.poster);
       dispatch(createAction(UPDATE_CART, JSON.parse(window.localStorage.getItem('carts'))));
     }
   };

@@ -20,10 +20,10 @@ export default ({ book, isAuthenticate, history }) => {
     if (isAuthenticate) {
       store.dispatch({
         type: UPDATE_CART_REQUEST,
-        payload: [{ bookId, amount: 1, title, poster }],
+        payload: [{ bookId, money, amount: 1, title, poster }],
       });
     } else {
-      productLocal(bookId, 1, title, poster);
+      productLocal(bookId, money, 1, title, poster);
       store.dispatch(createAction(UPDATE_CART, JSON.parse(window.localStorage.getItem('carts'))));
     }
   };
