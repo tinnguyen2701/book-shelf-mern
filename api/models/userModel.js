@@ -52,6 +52,19 @@ const userSchema = new Schema({
       poster: String,
     },
   ],
+  buy: [
+    {
+      _id: Schema.Types.ObjectId,
+      bookId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+      money: Number,
+      amount: Number,
+      title: String,
+      poster: String,
+    },
+  ],
 });
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,7 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
-import { callApi, createAction } from 'dorothy/utils';
+import { callApi, createAction, createReducer } from 'dorothy/utils';
 
 export const DELETE_CART_REQUEST = 'DELETE_CART_REQUEST';
 export const DELETE_CART_RESPONSE = 'DELETE_CART_RESPONSE';
@@ -14,6 +14,10 @@ export const ADD_ORDER_ERROR = 'ADD_ORDER_ERROR';
 export const DELETE_ORDER_REQUEST = 'DELETE_ORDER_REQUEST';
 export const DELETE_ORDER_RESPONSE = 'DELETE_ORDER_RESPONSE';
 export const DELETE_ORDER_ERROR = 'DELETE_ORDER_ERROR';
+
+export const BUY_REQUEST = 'BUY_REQUEST';
+export const BUY_RESPONSE = 'BUY_RESPONSE';
+export const BUY_ERROR = 'BUY_ERROR';
 
 /* handler state for delete cart */
 function* requestDeleteCart(action) {
@@ -95,3 +99,53 @@ export const deleteOrderActionHandler = {
   }),
 };
 export const deleteOrderSaga = [fork(watchDeleteOrderRequest)];
+
+/* handler state for buy item */
+function* requestBuy(action) {
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}order/buy`,
+      action.payload,
+    );
+
+    if (response.status === 403)
+      yield put(
+        createAction(BUY_ERROR, `some thing went wrong with amount item: ${response.title}`),
+      );
+    if (response.status === 404)
+      yield put(createAction(BUY_ERROR, `not found item: ${response.title}`));
+    if (response.success) yield put(createAction(BUY_RESPONSE, response));
+  } catch (error) {
+    yield put(createAction(BUY_ERROR, error));
+  }
+}
+function* watchBuyRequest() {
+  yield takeLatest(BUY_REQUEST, requestBuy);
+}
+
+export const buyActionHandler = {
+  [BUY_RESPONSE]: state => ({
+    ...state,
+    currentUser: {
+      ...state.currentUser,
+      order: [],
+    },
+  }),
+};
+
+const initMessage = { buy: null };
+const messageActionHandler = {
+  [BUY_RESPONSE]: state => ({
+    ...state,
+    buy: 'buy success!',
+  }),
+  [BUY_ERROR]: (state, action) => ({
+    ...state,
+    buy: action.payload,
+  }),
+};
+export const messageReducer = createReducer(initMessage, messageActionHandler);
+
+export const buySaga = [fork(watchBuyRequest)];

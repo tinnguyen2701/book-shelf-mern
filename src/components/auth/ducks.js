@@ -5,6 +5,7 @@ import {
   deleteCartActionHandler,
   addOrderActionHandler,
   deleteOrderActionHandler,
+  buyActionHandler,
 } from '../Cart/ducks';
 
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
@@ -104,6 +105,7 @@ const loginActionHandler = {
   ...deleteCartActionHandler,
   ...addOrderActionHandler,
   ...deleteOrderActionHandler,
+  ...buyActionHandler,
 };
 
 export const loginReducer = createReducer(initLogin, loginActionHandler);
