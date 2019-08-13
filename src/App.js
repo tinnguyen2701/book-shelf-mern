@@ -17,6 +17,7 @@ import Sell from './components/Sell';
 import Post from './components/Post';
 import { UPDATE_CART } from './components/duck';
 import Cart from './components/Cart';
+import User from './components/User';
 
 export default () => {
   useEffect(() => {
@@ -51,6 +52,7 @@ export default () => {
           <Route path="/sell" component={Sell} />
           <Route path="/post/:postId" component={Post} />
           <Route path="/carts" component={Cart} />
+          <Route path="/user/" component={User} />
         </Router>
       </BrowserRouter>
     </ThemeProvider>

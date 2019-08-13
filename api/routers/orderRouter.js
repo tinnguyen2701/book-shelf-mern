@@ -50,6 +50,9 @@ orderRouter.post('/buy', async (req, res) => {
         if (!book) return res.send({ status: 404, title: item.title });
         else if (book.amount < item.amount) return res.send({ status: 403, title: item.title });
         else {
+          book.amount -= item.amount;
+          book.bought += item.amount;
+          book.save();
           user.buy.push(item);
         }
       }

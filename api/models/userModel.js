@@ -27,6 +27,12 @@ const userSchema = new Schema({
   avatar: {
     type: String,
   },
+  bought: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Book',
+    },
+  ],
   carts: [
     {
       bookId: {

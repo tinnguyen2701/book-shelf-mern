@@ -48,7 +48,7 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
         <p>poster: {post.poster}</p>
         <p>images: {post.images}</p>
         <p>money: {post.money}</p>
-        <p>amount: {post.amount}</p>
+        <p>amount: {post.amount === 0 ? 'out of stock' : post.amount}</p>
         <p>description: {post.description}</p>
         <p>like {post.favorites.length}</p>
         <button type="button" onClick={() => onClickHandler()}>

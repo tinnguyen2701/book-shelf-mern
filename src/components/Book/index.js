@@ -34,7 +34,7 @@ export default ({ book, isAuthenticate, history }) => {
       <div>anh: {poster}</div>
       <div>{money}</div>
       <div>{description}</div>
-      <div>{amount}</div>
+      <div>{amount === 0 ? 'out of stock' : amount}</div>
       <button type="button" onClick={() => history.push(`/post/${book._id}`)}>
         More
       </button>

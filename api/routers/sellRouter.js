@@ -2,6 +2,7 @@
 const sellRouter = require('express').Router();
 
 const Book = require('../models/bookModel');
+const User = require('../models/userModel');
 const log = require('../utils/logger');
 
 sellRouter.post('/', async (req, res) => {
@@ -24,12 +25,25 @@ sellRouter.post('/', async (req, res) => {
   await book
     .save()
     .then(() => {
+      User.findById(req.user._id)
+        .then(user => {
+          if (!user) {
+            log.logError('user not found');
+            return res.status(500).send({ success: false });
+          }
+          user.bought.push(book.id);
+          user.save();
+        })
+        .catch(() => {
+          log.logError('find user went wrong!');
+          return res.status(500).send({ success: false });
+        });
       log.logInfo('save success');
       return res.status(200).send({ success: true });
     })
     .catch(() => {
       log.logError('save book went wrong!');
-      return res.status(500).send('ok');
+      return res.status(500).send({ success: false });
     });
 });
 

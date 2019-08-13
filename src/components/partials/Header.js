@@ -1,3 +1,4 @@
+/* eslint no-underscore-dangle: "off" */
 import React from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
@@ -59,6 +60,11 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
         {currentUser && (
           <li>
             <Link to="/sell">Sell</Link>
+          </li>
+        )}
+        {currentUser && (
+          <li>
+            <Link to="/user">{currentUser.username}</Link>
           </li>
         )}
       </ul>

@@ -26,6 +26,10 @@ export const VERIFY_ERROR = 'VERIFY_ERROR';
 export const UPDATE_PASSWORD_REQUEST = 'UPDATE_PASSWORD_REQUEST';
 export const UPDATE_PASSWORD_ERROR = 'UPDATE_PASSWORD_ERROR';
 
+export const EDIT_USER_REQUEST = 'EDIT_USER_REQUEST';
+export const EDIT_USER_RESPONSE = 'EDIT_USER_RESPONSE';
+export const EDIT_USER_ERROR = 'EDIT_USER_ERROR';
+
 export const SIGN_OUT = 'SIGN_OUT';
 
 /* handler state for register */
@@ -168,7 +172,6 @@ export const verifyReducer = createReducer(initVerify, verifyActionHandler);
 export const verifySaga = [fork(watchVerifyRequest)];
 
 /* handler state for update password */
-
 function* requestUpdatePassword(action) {
   const { password, history } = action.payload;
   try {
@@ -187,3 +190,22 @@ function* watchUpdatePasswordRequest() {
   yield takeLatest(UPDATE_PASSWORD_REQUEST, requestUpdatePassword);
 }
 export const updatePasswordSaga = [fork(watchUpdatePasswordRequest)];
+
+/* handler state for update user */
+function* requestEditUser(action) {
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}api/auth/editUser`,
+      action.payload,
+    );
+    yield put(createAction(EDIT_USER_RESPONSE, response));
+  } catch (error) {
+    yield put(createAction(EDIT_USER_ERROR, error));
+  }
+}
+function* watchEditUserRequest() {
+  yield takeLatest(EDIT_USER_REQUEST, requestEditUser);
+}
+export const editUserSaga = [fork(watchEditUserRequest)];
