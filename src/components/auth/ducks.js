@@ -105,6 +105,14 @@ const loginActionHandler = {
     isAuthenticate: false,
     currentUser: null,
   }),
+  [EDIT_USER_RESPONSE]: (state, action) => ({
+    ...state,
+    currentUser: {
+      ...state.currentUser,
+      username: action.payload.username,
+      avatar: action.payload.avatar,
+    },
+  }),
   ...addToCartActionHandler,
   ...deleteCartActionHandler,
   ...addOrderActionHandler,
@@ -200,7 +208,7 @@ function* requestEditUser(action) {
       `${process.env.REACT_APP_BASE_URL}api/auth/editUser`,
       action.payload,
     );
-    yield put(createAction(EDIT_USER_RESPONSE, response));
+    if (response) yield put(createAction(EDIT_USER_RESPONSE, response));
   } catch (error) {
     yield put(createAction(EDIT_USER_ERROR, error));
   }

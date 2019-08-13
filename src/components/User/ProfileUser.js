@@ -4,11 +4,15 @@ import { EDIT_USER_REQUEST } from '../auth/ducks';
 
 export default ({ currentUser }) => {
   const [username, setUsername] = useState(currentUser.username);
-  const [password, setPassword] = useState(null);
+  const [oldPassword, setOldPassword] = useState(null);
+  const [newPassword, setNewPassword] = useState(null);
   const [avatar, setAvatar] = useState(currentUser.avatar);
 
   const onClickHandler = () => {
-    store.dispatch({ type: EDIT_USER_REQUEST, payload: { username, password, setAvatar } });
+    store.dispatch({
+      type: EDIT_USER_REQUEST,
+      payload: { username, oldPassword, newPassword, avatar },
+    });
   };
 
   return (
@@ -19,11 +23,19 @@ export default ({ currentUser }) => {
       </p>
       <p>
         Old Password:
-        <input type="password" value={password || ''} onChange={e => setPassword(e.target.value)} />
+        <input
+          type="password"
+          value={oldPassword || ''}
+          onChange={e => setOldPassword(e.target.value)}
+        />
       </p>
       <p>
         New Password:
-        <input type="password" value={password || ''} onChange={e => setPassword(e.target.value)} />
+        <input
+          type="password"
+          value={newPassword || ''}
+          onChange={e => setNewPassword(e.target.value)}
+        />
       </p>
       <p>
         Avatar:

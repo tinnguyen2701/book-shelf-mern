@@ -146,4 +146,49 @@ authRouter.get('/', passport.authenticate('jwt', { session: false }), (req, res)
   return res.status(200).json(req.user);
 });
 
+authRouter.post('/editUser', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { username, oldPassword, newPassword, avatar } = req.body;
+
+  await User.findById(req.user._id)
+    .then(async user => {
+      if (!user) {
+        logger.logError('user not found');
+        return res.sendStatus(404);
+      } else {
+        if (oldPassword) {
+          await bcrypt.compare(oldPassword, user.password).then(async isMatch => {
+            console.log(isMatch);
+
+            if (!isMatch) {
+              console.log('y');
+              return res.sendStatus(403);
+            }
+            console.log('chay ho');
+
+            await bcrypt.genSalt(10, function(err, salt) {
+              bcrypt.hash(newPassword, salt, function(err, hash) {
+                user.password = hash;
+              });
+            });
+          });
+        }
+        console.log('whattttt');
+
+        user.avatar = avatar;
+        user.username = username;
+        user
+          .save()
+          .then(() => res.status(200).send({ username, avatar }))
+          .catch(err => {
+            logger.logError('save user went wrong', err);
+            return res.sendStatus(500);
+          });
+      }
+    })
+    .catch(() => {
+      logger.logError('find user went wrong');
+      return res.sendStatus(500);
+    });
+});
+
 module.exports = authRouter;
