@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import store from 'store';
 import { EDIT_USER_REQUEST } from '../auth/ducks';
 
-export default ({ currentUser }) => {
+const ProfileUser = ({ currentUser, message }) => {
   const [username, setUsername] = useState(currentUser.username);
   const [oldPassword, setOldPassword] = useState(null);
   const [newPassword, setNewPassword] = useState(null);
@@ -44,6 +45,11 @@ export default ({ currentUser }) => {
       <button type="button" onClick={() => onClickHandler()}>
         Save
       </button>
+      {message && <p>{message}</p>}
     </div>
   );
 };
+
+export default connect(state => ({
+  message: state.message,
+}))(ProfileUser);

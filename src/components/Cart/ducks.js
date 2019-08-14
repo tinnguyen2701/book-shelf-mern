@@ -19,6 +19,8 @@ export const BUY_REQUEST = 'BUY_REQUEST';
 export const BUY_RESPONSE = 'BUY_RESPONSE';
 export const BUY_ERROR = 'BUY_ERROR';
 
+export const MESSAGE = 'MESSAGE';
+
 /* handler state for delete cart */
 function* requestDeleteCart(action) {
   try {
@@ -111,12 +113,13 @@ function* requestBuy(action) {
     );
 
     if (response.status === 403)
-      yield put(
-        createAction(BUY_ERROR, `some thing went wrong with amount item: ${response.title}`),
-      );
+      yield put(createAction(MESSAGE, `some thing went wrong with amount item: ${response.title}`));
     if (response.status === 404)
       yield put(createAction(BUY_ERROR, `not found item: ${response.title}`));
-    if (response.success) yield put(createAction(BUY_RESPONSE, response));
+    if (response.success) {
+      yield put(createAction(BUY_RESPONSE, response));
+      yield put(createAction(MESSAGE, 'buy success!'));
+    }
   } catch (error) {
     yield put(createAction(BUY_ERROR, error));
   }
@@ -135,16 +138,9 @@ export const buyActionHandler = {
   }),
 };
 
-const initMessage = { buy: null };
+const initMessage = null;
 const messageActionHandler = {
-  [BUY_RESPONSE]: state => ({
-    ...state,
-    buy: 'buy success!',
-  }),
-  [BUY_ERROR]: (state, action) => ({
-    ...state,
-    buy: action.payload,
-  }),
+  [MESSAGE]: (state, action) => action.payload,
 };
 export const messageReducer = createReducer(initMessage, messageActionHandler);
 

@@ -6,7 +6,7 @@ import CartItem from './CartItem';
 import OrderItem from './OrderItem';
 import { BUY_REQUEST } from './ducks';
 
-const Cart = ({ currentUser, messageBuy, dispatch }) => {
+const Cart = ({ currentUser, message, dispatch }) => {
   const onClickHandler = () => {
     dispatch({ type: BUY_REQUEST, payload: { order: currentUser.order } });
   };
@@ -32,7 +32,7 @@ const Cart = ({ currentUser, messageBuy, dispatch }) => {
             Buy
           </button>
         )}
-        {messageBuy && <p>{messageBuy}</p>}
+        {message && <p>{message}</p>}
       </div>
     </div>
   );
@@ -40,5 +40,5 @@ const Cart = ({ currentUser, messageBuy, dispatch }) => {
 
 export default connect(state => ({
   currentUser: state.login.currentUser,
-  messageBuy: state.message.buy,
+  message: state.message,
 }))(Cart);

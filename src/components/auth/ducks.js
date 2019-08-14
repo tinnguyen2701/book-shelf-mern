@@ -6,6 +6,7 @@ import {
   addOrderActionHandler,
   deleteOrderActionHandler,
   buyActionHandler,
+  MESSAGE,
 } from '../Cart/ducks';
 
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
@@ -208,7 +209,9 @@ function* requestEditUser(action) {
       `${process.env.REACT_APP_BASE_URL}api/auth/editUser`,
       action.payload,
     );
-    if (response) yield put(createAction(EDIT_USER_RESPONSE, response));
+    if (response.status === 403) {
+      yield put(createAction(MESSAGE, response.message));
+    } else if (response.success) yield put(createAction(MESSAGE, 'save profile success!'));
   } catch (error) {
     yield put(createAction(EDIT_USER_ERROR, error));
   }
@@ -216,4 +219,5 @@ function* requestEditUser(action) {
 function* watchEditUserRequest() {
   yield takeLatest(EDIT_USER_REQUEST, requestEditUser);
 }
+
 export const editUserSaga = [fork(watchEditUserRequest)];

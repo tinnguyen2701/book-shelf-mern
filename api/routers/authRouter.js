@@ -146,43 +146,37 @@ authRouter.get('/', passport.authenticate('jwt', { session: false }), (req, res)
   return res.status(200).json(req.user);
 });
 
-authRouter.post('/editUser', passport.authenticate('jwt', { session: false }), async (req, res) => {
+authRouter.post('/editUser', passport.authenticate('jwt', { session: false }), (req, res) => {
   const { username, oldPassword, newPassword, avatar } = req.body;
 
-  await User.findById(req.user._id)
-    .then(async user => {
+  return new Promise((resolve, reject) => {
+    resolve(User.findById(req.user._id));
+  })
+    .then(user => {
       if (!user) {
         logger.logError('user not found');
         return res.sendStatus(404);
       } else {
         if (oldPassword) {
-          await bcrypt.compare(oldPassword, user.password).then(async isMatch => {
-            console.log(isMatch);
-
+          bcrypt.compare(oldPassword, user.password).then(isMatch => {
             if (!isMatch) {
-              console.log('y');
-              return res.sendStatus(403);
+              return res.status(200).send({ status: 403, message: 'old password was wrong' });
             }
-            console.log('chay ho');
 
-            await bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.genSalt(10, function(err, salt) {
               bcrypt.hash(newPassword, salt, function(err, hash) {
                 user.password = hash;
+                user.save();
+                return res.status(200).send({ success: true, username, avatar });
               });
             });
           });
+        } else {
+          user.username = username;
+          user.avatar = avatar;
+          user.save();
+          return res.status(200).send({ success: true, username, avatar });
         }
-        console.log('whattttt');
-
-        user.avatar = avatar;
-        user.username = username;
-        user
-          .save()
-          .then(() => res.status(200).send({ username, avatar }))
-          .catch(err => {
-            logger.logError('save user went wrong', err);
-            return res.sendStatus(500);
-          });
       }
     })
     .catch(() => {
