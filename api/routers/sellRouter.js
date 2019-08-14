@@ -31,7 +31,7 @@ sellRouter.post('/', async (req, res) => {
             log.logError('user not found');
             return res.status(500).send({ success: false });
           }
-          user.bought.push(book.id);
+          user.sell.push(book.id);
           user.save();
         })
         .catch(() => {
