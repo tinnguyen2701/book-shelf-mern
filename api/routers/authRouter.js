@@ -8,6 +8,7 @@ const nodemailer = require('nodemailer');
 const logger = require('../utils/logger');
 
 const User = require('../models/userModel');
+const Book = require('../models/bookModel');
 
 authRouter.post('/register', async (req, res) => {
   const { email, username, password, avatar } = req.body;
@@ -185,4 +186,26 @@ authRouter.post('/editUser', passport.authenticate('jwt', { session: false }), (
     });
 });
 
+authRouter.get('/shelf', passport.authenticate('jwt', { session: false }), (req, res) => {
+  return Promise.resolve(User.findById(req.user._id))
+    .then(user =>
+      Promise.all(
+        user.sell.map(item => {
+          const book = Book.findById(item);
+          return book;
+        }),
+      )
+        .then(responses => {
+          return res.status(200).send(responses);
+        })
+        .catch(() => {
+          logger.logError('find book went wrong');
+          return res.sendStatus(500);
+        }),
+    )
+    .catch(() => {
+      logger.logError('find user went wrong');
+      return res.sendStatus(500);
+    });
+});
 module.exports = authRouter;

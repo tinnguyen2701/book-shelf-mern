@@ -1,12 +1,12 @@
 import React from 'react';
 
 export default ({ currentUser }) => {
-  console.log(currentUser);
   return (
     <div>
+      <hr />
       <p>List</p>
       <div>
-        buy
+        b u y
         {currentUser.buy.map((item, index) => (
           <div key={index.toString()}>
             <p>poster: {item.poster}</p>
@@ -17,14 +17,13 @@ export default ({ currentUser }) => {
         ))}
       </div>
       <div>
-        sell
+        <hr />s e l l
         {currentUser.sell.map((item, index) => (
           <div key={index.toString()}>
             <p>poster: {item.poster}</p>
             <p>title: {item.title}</p>
-            <p>sum amount</p>
-
-            <p>amount: {item.amount}</p>
+            <p>amount: {item.amount + item.bought}</p>
+            <p>soll: {item.bought}</p>
             <p>money: {item.money}</p>
           </div>
         ))}

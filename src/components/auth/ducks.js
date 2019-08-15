@@ -31,6 +31,10 @@ export const EDIT_USER_REQUEST = 'EDIT_USER_REQUEST';
 export const EDIT_USER_RESPONSE = 'EDIT_USER_RESPONSE';
 export const EDIT_USER_ERROR = 'EDIT_USER_ERROR';
 
+export const SHELF_REQUEST = 'SHELF_REQUEST';
+export const SHELF_RESPONSE = 'SHELF_RESPONSE';
+export const SHELF_ERROR = 'SHELF_ERROR';
+
 export const SIGN_OUT = 'SIGN_OUT';
 
 /* handler state for register */
@@ -114,6 +118,13 @@ const loginActionHandler = {
       avatar: action.payload.avatar,
     },
   }),
+  [SHELF_RESPONSE]: (state, action) => ({
+    ...state,
+    currentUser: {
+      ...state.currentUser,
+      sell: action.payload,
+    },
+  }),
   ...addToCartActionHandler,
   ...deleteCartActionHandler,
   ...addOrderActionHandler,
@@ -131,6 +142,7 @@ function* requestCurrentUser(action) {
       token: action.payload,
     });
     yield put(createAction(GET_CURRENT_USER_RESPONSE, response));
+    yield put({ type: SHELF_REQUEST });
   } catch (error) {
     yield put(createAction(GET_CURRENT_USER_ERROR, error));
   }
@@ -221,3 +233,18 @@ function* watchEditUserRequest() {
 }
 
 export const editUserSaga = [fork(watchEditUserRequest)];
+
+/* handler state for update user */
+function* requestShelf() {
+  try {
+    const response = yield call(callApi, 'GET', `${process.env.REACT_APP_BASE_URL}api/auth/shelf`);
+    yield put(createAction(SHELF_RESPONSE, response));
+  } catch (error) {
+    yield put(createAction(SHELF_ERROR, error));
+  }
+}
+function* watchShelfRequest() {
+  yield takeLatest(SHELF_REQUEST, requestShelf);
+}
+
+export const shelfSaga = [fork(watchShelfRequest)];

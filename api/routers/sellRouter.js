@@ -24,14 +24,14 @@ sellRouter.post('/', async (req, res) => {
 
   await book
     .save()
-    .then(() => {
+    .then(result => {
       User.findById(req.user._id)
         .then(user => {
           if (!user) {
             log.logError('user not found');
             return res.status(500).send({ success: false });
           }
-          user.sell.push(book.id);
+          user.sell.push(result._id);
           user.save();
         })
         .catch(() => {
