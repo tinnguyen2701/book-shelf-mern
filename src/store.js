@@ -31,6 +31,7 @@ import {
   buySaga,
   messageReducer as message,
 } from './components/Cart/ducks';
+import { deleteBuySaga, deleteSellSaga, editSellSaga } from './components/User/ducks';
 
 const rootReducer = combineReducers({
   login,
@@ -62,6 +63,9 @@ export const rootSaga = function* rootSaga() {
     ...buySaga,
     ...editUserSaga,
     ...shelfSaga,
+    ...deleteBuySaga,
+    ...deleteSellSaga,
+    ...editSellSaga,
   ]);
 };
 

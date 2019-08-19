@@ -8,6 +8,7 @@ import {
   buyActionHandler,
   MESSAGE,
 } from '../Cart/ducks';
+import { deleteBuyActionHandler, deleteSellActionHandler } from '../User/ducks';
 
 export const REGISTER_REQUEST = 'REGISTER_REQUEST';
 export const REGISTER_ERROR = 'REGISTER_ERROR';
@@ -130,6 +131,8 @@ const loginActionHandler = {
   ...addOrderActionHandler,
   ...deleteOrderActionHandler,
   ...buyActionHandler,
+  ...deleteBuyActionHandler,
+  ...deleteSellActionHandler,
 };
 
 export const loginReducer = createReducer(initLogin, loginActionHandler);

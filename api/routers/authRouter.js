@@ -208,4 +208,116 @@ authRouter.get('/shelf', passport.authenticate('jwt', { session: false }), (req,
       return res.sendStatus(500);
     });
 });
+
+authRouter.post(
+  '/deleteBuy',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    await User.findById(req.user._id)
+      .then(user => {
+        if (!user) {
+          logger.logError('user not found');
+          return res.sendStatus(403);
+        } else {
+          const matchItem = user.buy.findIndex(item => item._id.equals(req.body.id));
+          Book.findById(user.buy[matchItem].bookId)
+            .populate('author')
+            .then(book => {
+              if (!book) {
+                logger.logError('find book not found');
+                return res.sendStatus(404);
+              } else if (book.author._id.equals(req.user._id)) {
+                user.buy.splice(matchItem, 1);
+                user.save();
+                return res.status(200).send(user.buy);
+              } else {
+                logger.logError('you dont have permission');
+                return res.sendStatus(401);
+              }
+            })
+            .catch(() => {
+              logger.logError('find book went wrong');
+              return res.sendStatus(500);
+            });
+        }
+      })
+      .catch(() => {
+        logger.logError('find user went wrong');
+        return res.sendStatus(500);
+      });
+  },
+);
+
+authRouter.post(
+  '/deleteSell',
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    await User.findById(req.user._id)
+      .then(user => {
+        if (!user) {
+          logger.logError('user not found');
+          return res.sendStatus(403);
+        } else {
+          const matchItem = user.sell.findIndex(item => item.equals(req.body.id));
+
+          Book.findById(req.body.id)
+            .populate('author')
+            .then(book => {
+              if (!book) {
+                logger.logError('find book not found');
+                return res.sendStatus(404);
+              } else if (book.author._id.equals(req.user._id)) {
+                user.sell.splice(matchItem, 1);
+
+                book.remove();
+
+                user.save();
+                return Promise.all(
+                  user.sell.map(item => {
+                    const book = Book.findById(item);
+                    return book;
+                  }),
+                )
+                  .then(responses => {
+                    return res.status(200).send(responses);
+                  })
+                  .catch(() => {
+                    logger.logError('find book went wrong');
+                    return res.sendStatus(500);
+                  });
+              } else {
+                logger.logError('you dont have permission');
+                return res.sendStatus(401);
+              }
+            })
+            .catch(() => {
+              logger.logError('find book went wrong');
+              return res.sendStatus(500);
+            });
+        }
+      })
+      .catch(() => {
+        logger.logError('find user went wrong');
+        return res.sendStatus(500);
+      });
+  },
+);
+
+authRouter.post('/editSell', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  console.log(req.body);
+  await User.findById(req.user._id)
+    .then(user => {
+      if (!user) {
+        logger.logError('user not found');
+        return res.sendStatus(403);
+      } else {
+        return res.status(200).send(user.buy);
+      }
+    })
+    .catch(() => {
+      logger.logError('find user went wrong');
+      return res.sendStatus(500);
+    });
+});
+
 module.exports = authRouter;
