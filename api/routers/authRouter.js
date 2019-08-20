@@ -304,14 +304,24 @@ authRouter.post(
 );
 
 authRouter.post('/editSell', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  console.log(req.body);
   await User.findById(req.user._id)
     .then(user => {
       if (!user) {
         logger.logError('user not found');
         return res.sendStatus(403);
       } else {
-        return res.status(200).send(user.buy);
+        Book.findById(req.body.id)
+          .then(book => {
+            if (!book || !book.author.equals(req.user._id)) {
+              logger.logError('find book not found');
+              return res.sendStatus(404);
+            }
+            return res.status(200).send(book);
+          })
+          .catch(() => {
+            logger.logError('find book went wrong');
+            return res.sendStatus(500);
+          });
       }
     })
     .catch(() => {

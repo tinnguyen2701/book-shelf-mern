@@ -27,6 +27,10 @@ export const UPDATE_CART_REQUEST = 'UPDATE_CART_REQUEST';
 export const UPDATE_CART_RESPONSE = 'UPDATE_CART_RESPONSE';
 export const UPDATE_CART_ERROR = 'UPDATE_CART_ERROR';
 
+export const UPDATE_POST_REQUEST = 'UPDATE_POST_REQUEST';
+export const UPDATE_POST_RESPONSE = 'UPDATE_POST_RESPONSE';
+export const UPDATE_POST_ERROR = 'UPDATE_POST_ERROR';
+
 /* handler state for get post */
 function* requestPost(action) {
   try {
@@ -189,3 +193,39 @@ export const addToCartActionHandler = {
   }),
 };
 export const addToCartSaga = [fork(watchAddToCartRequest)];
+
+/* handler state for update post */
+function* requestUpdatePost(action) {
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}sell/update`,
+      action.payload,
+    );
+    if (response.success) {
+      yield put(createAction(UPDATE_POST_RESPONSE, response.success));
+    }
+  } catch (error) {
+    yield put(createAction(UPDATE_POST_ERROR, error));
+  }
+}
+function* watchUpdatePostRequest() {
+  yield takeLatest(UPDATE_POST_REQUEST, requestUpdatePost);
+}
+
+export const updatePostActionHandler = {
+  [UPDATE_POST_RESPONSE]: state => ({
+    ...state,
+    status: 'Update post success !',
+  }),
+  [UPDATE_POST_REQUEST]: state => ({
+    ...state,
+    status: '',
+  }),
+  [UPDATE_POST_ERROR]: state => ({
+    ...state,
+    status: 'Update post went wrong !',
+  }),
+};
+export const updatePostSaga = [fork(watchUpdatePostRequest)];

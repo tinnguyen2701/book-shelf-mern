@@ -18,6 +18,7 @@ import Post from './components/Post';
 import { UPDATE_CART } from './components/duck';
 import Cart from './components/Cart';
 import User from './components/User';
+import EditPost from './components/Post/EditPost';
 
 export default () => {
   useEffect(() => {
@@ -50,7 +51,8 @@ export default () => {
           <Route path="/auth/verify" component={Verify} />
           <Route path="/auth/rememberPassword" component={RememberPassword} />
           <Route path="/sell" component={Sell} />
-          <Route path="/post/:postId" component={Post} />
+          <Route exact path="/post/:postId" component={Post} />
+          <Route path="/post/edit/:postId" component={EditPost} />
           <Route path="/carts" component={Cart} />
           <Route path="/user/" component={User} />
         </Router>

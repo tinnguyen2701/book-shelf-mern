@@ -1,5 +1,6 @@
 import { fork, put, call, takeLatest } from 'redux-saga/effects';
-import { callApi, createAction } from 'dorothy/utils';
+import { callApi, createAction, createReducer } from 'dorothy/utils';
+import { updatePostActionHandler } from '../Post/ducks';
 
 export const DELETE_BUY_REQUEST = 'DELETE_BUY_REQUEST';
 export const DELETE_BUY_RESPONSE = 'DELETE_BUY_RESPONSE';
@@ -80,6 +81,8 @@ function* requestEditSell(action) {
       `${process.env.REACT_APP_BASE_URL}api/auth/editSell`,
       { id: action.payload },
     );
+    if (!response) window.location.href = '/';
+
     yield put(createAction(EDIT_SELL_RESPONSE, response));
   } catch (error) {
     yield put(createAction(EDIT_SELL_ERROR, error));
@@ -88,13 +91,16 @@ function* requestEditSell(action) {
 function* watchEditSellRequest() {
   yield takeLatest(EDIT_SELL_REQUEST, requestEditSell);
 }
-export const editSellActionHandler = {
+
+const initEditSell = { book: null, status: null };
+
+const editSellActionHandler = {
   [EDIT_SELL_RESPONSE]: (state, action) => ({
     ...state,
-    currentUser: {
-      ...state.currentUser,
-      sell: action.payload,
-    },
+    book: action.payload,
   }),
+  ...updatePostActionHandler,
 };
+
+export const editSellReducer = createReducer(initEditSell, editSellActionHandler);
 export const editSellSaga = [fork(watchEditSellRequest)];

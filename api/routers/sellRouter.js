@@ -47,4 +47,37 @@ sellRouter.post('/', async (req, res) => {
     });
 });
 
+sellRouter.post('/update', async (req, res) => {
+  const { id, title, description, money, amount, poster, images } = req.body;
+
+  await Book.findById(id)
+    .then(book => {
+      if (!book || !book.author.equals(req.user._id)) {
+        log.logError('save book went wrong!');
+        return res.sendStatus(404);
+      }
+      book.title = title;
+      book.description = description;
+      book.money = money;
+      book.amount = amount;
+      book.poster = poster;
+      book.images = images;
+
+      book
+        .save()
+        .then(() => {
+          log.logError('update book success!');
+          return res.status(200).send({ success: true });
+        })
+        .catch(() => {
+          log.logError('update book went wrong!');
+          return res.sendStatus(500);
+        });
+    })
+    .catch(() => {
+      log.logError('find book went wrong!');
+      return res.sendStatus(500);
+    });
+});
+
 module.exports = sellRouter;

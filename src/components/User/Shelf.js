@@ -1,9 +1,10 @@
 /* eslint no-underscore-dangle: 'off' */
 import React from 'react';
 import store from 'store';
-import { DELETE_SELL_REQUEST, DELETE_BUY_REQUEST, EDIT_SELL_REQUEST } from './ducks';
+import { withRouter } from 'react-router-dom';
+import { DELETE_SELL_REQUEST, DELETE_BUY_REQUEST } from './ducks';
 
-export default ({ currentUser }) => {
+const Shelf = ({ currentUser, history }) => {
   const onDeleteBoughtHandler = id => {
     store.dispatch({ type: DELETE_BUY_REQUEST, payload: id });
   };
@@ -13,7 +14,7 @@ export default ({ currentUser }) => {
   };
 
   const onEditSelltHandler = id => {
-    store.dispatch({ type: EDIT_SELL_REQUEST, payload: id });
+    history.push(`/post/edit/${id}`);
   };
 
   return (
@@ -49,7 +50,7 @@ export default ({ currentUser }) => {
               <button type="button" onClick={() => onDeleteSelltHandler(item._id)}>
                 Delete
               </button>
-              <button type="button" onClick={() => onEditSelltHandler()}>
+              <button type="button" onClick={() => onEditSelltHandler(item._id)}>
                 Edit
               </button>
             </p>
@@ -59,3 +60,5 @@ export default ({ currentUser }) => {
     </div>
   );
 };
+
+export default withRouter(Shelf);
