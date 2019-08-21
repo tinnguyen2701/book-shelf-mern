@@ -1,5 +1,5 @@
 /* eslint no-underscore-dangle: "off" */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -24,6 +24,16 @@ const Div = styled.div`
 `;
 
 const Header = ({ history, currentUser, carts, dispatch }) => {
+  const [value, setValue] = useState('');
+
+  const onSubmitHandler = e => {
+    e.preventDefault();
+    history.push({
+      pathname: '/search',
+      search: `?name=${value}`,
+    });
+  };
+
   const onClickHandler = e => {
     e.preventDefault();
     window.localStorage.removeItem('JWT');
@@ -67,6 +77,18 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
             <Link to="/user">{currentUser.username}</Link>
           </li>
         )}
+        <li>
+          <form onSubmit={e => onSubmitHandler(e)}>
+            <input
+              type="text"
+              placeholder="Search .. "
+              value={value}
+              onChange={e => setValue(e.target.value)}
+            />
+            <button type="submit">Search</button>
+            {/* <Link to={{ pathname: '/search', search: `?name=${value}` }}>Search</Link> */}
+          </form>
+        </li>
       </ul>
     </Div>
   );

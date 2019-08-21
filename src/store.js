@@ -38,6 +38,7 @@ import {
   editSellSaga,
   editSellReducer as editSell,
 } from './components/User/ducks';
+import { searchSaga, searchReducer as search } from './components/Search/duck';
 
 const rootReducer = combineReducers({
   login,
@@ -47,6 +48,7 @@ const rootReducer = combineReducers({
   post,
   message,
   editSell,
+  search,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -74,6 +76,7 @@ export const rootSaga = function* rootSaga() {
     ...deleteSellSaga,
     ...editSellSaga,
     ...updatePostSaga,
+    ...searchSaga,
   ]);
 };
 

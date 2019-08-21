@@ -19,6 +19,7 @@ import { UPDATE_CART } from './components/duck';
 import Cart from './components/Cart';
 import User from './components/User';
 import EditPost from './components/Post/EditPost';
+import Search from './components/Search';
 
 export default () => {
   useEffect(() => {
@@ -55,6 +56,7 @@ export default () => {
           <Route path="/post/edit/:postId" component={EditPost} />
           <Route path="/carts" component={Cart} />
           <Route path="/user/" component={User} />
+          <Route path="/search" component={Search} />
         </Router>
       </BrowserRouter>
     </ThemeProvider>

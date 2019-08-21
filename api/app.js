@@ -9,6 +9,7 @@ const sellRouter = require('./routers/sellRouter');
 const bookRouter = require('./routers/bookRouter');
 const cartRouter = require('./routers/cartRouter');
 const orderRouter = require('./routers/orderRouter');
+const searchRouter = require('./routers/searchRouter');
 
 // init app
 const app = express();
@@ -33,6 +34,7 @@ app.use('/sell', passport.authenticate('jwt', { session: false }), sellRouter);
 app.use('/carts', passport.authenticate('jwt', { session: false }), cartRouter);
 app.use('/order', passport.authenticate('jwt', { session: false }), orderRouter);
 app.use('/books', bookRouter);
+app.use('/search', searchRouter);
 
 // start server
 app.listen(process.env.PORT_SERVER, () =>
