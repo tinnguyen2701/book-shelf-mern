@@ -14,6 +14,9 @@ export const EDIT_SELL_REQUEST = 'EDIT_SELL_REQUEST';
 export const EDIT_SELL_RESPONSE = 'EDIT_SELL_RESPONSE';
 export const EDIT_SELL_ERROR = 'EDIT_SELL_ERROR';
 
+export const REMOVE_ACCOUNT_REQUEST = 'REMOVE_ACCOUNT_REQUEST';
+export const REMOVE_ACCOUNT_ERROR = 'REMOVE_ACCOUNT_ERROR';
+
 /* handler state for delete buy */
 
 function* requestDeleteBuy(action) {
@@ -104,3 +107,25 @@ const editSellActionHandler = {
 
 export const editSellReducer = createReducer(initEditSell, editSellActionHandler);
 export const editSellSaga = [fork(watchEditSellRequest)];
+
+/* handler state for remove account */
+function* requestRemoveAccount() {
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}api/auth/remove`,
+    );
+    if (response.success) {
+      window.localStorage.removeItem('JWT');
+      window.location.href = '/auth/login';
+    }
+  } catch (error) {
+    yield put(createAction(REMOVE_ACCOUNT_ERROR, error));
+  }
+}
+function* watchRemoveAccountRequest() {
+  yield takeLatest(REMOVE_ACCOUNT_REQUEST, requestRemoveAccount);
+}
+
+export const removeAccountSaga = [fork(watchRemoveAccountRequest)];

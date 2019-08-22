@@ -5,6 +5,8 @@ import { withRouter } from 'react-router-dom';
 import { DELETE_SELL_REQUEST, DELETE_BUY_REQUEST } from './ducks';
 
 const Shelf = ({ currentUser, history }) => {
+  console.log(currentUser);
+
   const onDeleteBoughtHandler = id => {
     store.dispatch({ type: DELETE_BUY_REQUEST, payload: id });
   };

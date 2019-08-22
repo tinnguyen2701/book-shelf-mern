@@ -89,6 +89,11 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
             {/* <Link to={{ pathname: '/search', search: `?name=${value}` }}>Search</Link> */}
           </form>
         </li>
+        {currentUser && currentUser.email === process.env.REACT_APP_MAIL_ADMIN && (
+          <li>
+            <Link to="/admin">Manage</Link>
+          </li>
+        )}
       </ul>
     </Div>
   );

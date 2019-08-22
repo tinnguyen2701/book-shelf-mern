@@ -20,6 +20,7 @@ import Cart from './components/Cart';
 import User from './components/User';
 import EditPost from './components/Post/EditPost';
 import Search from './components/Search';
+import Admin from './components/Admin';
 
 export default () => {
   useEffect(() => {
@@ -57,6 +58,7 @@ export default () => {
           <Route path="/carts" component={Cart} />
           <Route path="/user/" component={User} />
           <Route path="/search" component={Search} />
+          <Route path="/admin" component={Admin} />
         </Router>
       </BrowserRouter>
     </ThemeProvider>

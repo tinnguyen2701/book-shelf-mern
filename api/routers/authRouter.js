@@ -9,6 +9,7 @@ const logger = require('../utils/logger');
 
 const User = require('../models/userModel');
 const Book = require('../models/bookModel');
+const Comment = require('../models/commentModel');
 
 authRouter.post('/register', async (req, res) => {
   const { email, username, password, avatar } = req.body;
@@ -328,6 +329,24 @@ authRouter.post('/editSell', passport.authenticate('jwt', { session: false }), a
       logger.logError('find user went wrong');
       return res.sendStatus(500);
     });
+});
+
+authRouter.post('/remove', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  await Book.find({ author: req.user._id }).then(books => {
+    books.map(book => {
+      book.remove();
+    });
+  });
+
+  await Comment.find({ author: req.user._id }).then(comments => {
+    comments.map(comment => {
+      comment.remove();
+    });
+  });
+
+  await User.findById(req.user._id).remove();
+
+  return res.status(200).send({ success: true });
 });
 
 module.exports = authRouter;

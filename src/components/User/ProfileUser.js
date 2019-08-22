@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import store from 'store';
 import { EDIT_USER_REQUEST } from '../auth/ducks';
+import { REMOVE_ACCOUNT_REQUEST } from './ducks';
 
-const ProfileUser = ({ currentUser, message }) => {
+const ProfileUser = ({ currentUser, message, dispatch }) => {
   const [username, setUsername] = useState(currentUser.username);
   const [oldPassword, setOldPassword] = useState(null);
   const [newPassword, setNewPassword] = useState(null);
   const [avatar, setAvatar] = useState(currentUser.avatar);
+  const [isVisible, setIsVisible] = useState(false);
 
   const onClickHandler = () => {
-    store.dispatch({
+    dispatch({
       type: EDIT_USER_REQUEST,
       payload: { username, oldPassword, newPassword, avatar },
+    });
+  };
+
+  const onRemoveAccountHandler = () => {
+    dispatch({
+      type: REMOVE_ACCOUNT_REQUEST,
     });
   };
 
@@ -46,6 +53,20 @@ const ProfileUser = ({ currentUser, message }) => {
         Save
       </button>
       {message && <p>{message}</p>}
+      <br />
+      <button type="button" onClick={() => setIsVisible(true)}>
+        Remove Account
+      </button>
+      {isVisible && (
+        <div>
+          <button type="button" onClick={() => onRemoveAccountHandler()}>
+            REMOVE
+          </button>
+          <button type="button" onClick={() => setIsVisible(false)}>
+            cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 };

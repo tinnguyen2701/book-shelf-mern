@@ -1,7 +1,7 @@
-/* eslint no-underscore-dangle: "off" */
+/* eslint-disable */
 const sellRouter = require('express').Router();
 
-const Book = require('../models/bookModel');
+const Payload = require('../models/payloadModel');
 const User = require('../models/userModel');
 const log = require('../utils/logger');
 
@@ -12,7 +12,7 @@ sellRouter.post('/', async (req, res) => {
     log.logError('fields was required!');
     return res.status(400).send('fields was required!');
   }
-  const book = new Book({
+  const payload = new Payload({
     title,
     description,
     money,
@@ -20,9 +20,9 @@ sellRouter.post('/', async (req, res) => {
     poster,
     images,
   });
-  book.author = req.user._id;
+  payload.author = req.user._id;
 
-  await book
+  await payload
     .save()
     .then(result => {
       User.findById(req.user._id)
@@ -31,8 +31,6 @@ sellRouter.post('/', async (req, res) => {
             log.logError('user not found');
             return res.status(500).send({ success: false });
           }
-          user.sell.push(result._id);
-          user.save();
         })
         .catch(() => {
           log.logError('find user went wrong!');

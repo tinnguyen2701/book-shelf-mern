@@ -10,6 +10,7 @@ const bookRouter = require('./routers/bookRouter');
 const cartRouter = require('./routers/cartRouter');
 const orderRouter = require('./routers/orderRouter');
 const searchRouter = require('./routers/searchRouter');
+const payloadRouter = require('./routers/payloadRouter');
 
 // init app
 const app = express();
@@ -33,6 +34,7 @@ app.use('/api/auth', authRouter);
 app.use('/sell', passport.authenticate('jwt', { session: false }), sellRouter);
 app.use('/carts', passport.authenticate('jwt', { session: false }), cartRouter);
 app.use('/order', passport.authenticate('jwt', { session: false }), orderRouter);
+app.use('/payloads', passport.authenticate('jwt', { session: false }), payloadRouter);
 app.use('/books', bookRouter);
 app.use('/search', searchRouter);
 
