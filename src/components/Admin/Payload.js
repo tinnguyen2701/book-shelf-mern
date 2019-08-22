@@ -1,12 +1,17 @@
+/* eslint no-underscore-dangle: "off" */
 import React from 'react';
 import store from 'store';
-import { APPROVE_PAYLOAD_REQUEST } from './ducks';
+import { APPROVE_PAYLOAD_REQUEST, REJECT_PAYLOAD_REQUEST } from './ducks';
 
 export default ({ item }) => {
   const { title, description, money, poster, images } = item;
 
   const onApproveHandler = () => {
     store.dispatch({ type: APPROVE_PAYLOAD_REQUEST, payload: item });
+  };
+
+  const onRejectHandler = () => {
+    store.dispatch({ type: REJECT_PAYLOAD_REQUEST, payload: { id: item._id } });
   };
 
   return (
@@ -19,7 +24,9 @@ export default ({ item }) => {
       <button type="button" onClick={() => onApproveHandler()}>
         Approve
       </button>
-      <button type="button">Delete</button>
+      <button type="button" onClick={() => onRejectHandler()}>
+        Delete
+      </button>
     </div>
   );
 };

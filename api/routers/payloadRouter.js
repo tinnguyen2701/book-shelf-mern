@@ -42,12 +42,26 @@ payloadRouter.post('/approve', async (req, res) => {
       user.sell.push(book._id);
       user.save();
 
-      return res.status(200).send({ success: true });
+      const payloads = await Payload.find({});
+
+      return res.status(200).send({ success: true, payloads });
     })
     .catch(err => {
       logger.logError('save book went wrong', err);
       return res.sendStatus(500);
     });
+});
+
+payloadRouter.post('/reject', async (req, res) => {
+  if (req.user.email !== process.env.REACT_APP_MAIL_ADMIN) {
+    return res.sendStatus(401);
+  }
+
+  const payload = await Payload.findById(req.body.id);
+  await payload.remove();
+  const payloads = await Payload.find({});
+
+  return res.status(200).send({ success: true, payloads });
 });
 
 module.exports = payloadRouter;

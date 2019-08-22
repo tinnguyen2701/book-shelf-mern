@@ -9,6 +9,10 @@ export const APPROVE_PAYLOAD_REQUEST = 'APPROVE_PAYLOAD_REQUEST';
 export const APPROVE_PAYLOAD_RESPONSE = 'APPROVE_PAYLOAD_RESPONSE';
 export const APPROVE_PAYLOAD_ERROR = 'APPROVE_PAYLOAD_ERROR';
 
+export const REJECT_PAYLOAD_REQUEST = 'REJECT_PAYLOAD_REQUEST';
+export const REJECT_PAYLOAD_RESPONSE = 'REJECT_PAYLOAD_RESPONSE';
+export const REJECT_PAYLOAD_ERROR = 'REJECT_PAYLOAD_ERROR';
+
 /* handler state for get all payloads */
 function* requestPayload() {
   try {
@@ -25,6 +29,8 @@ function* watchPayloadRequest() {
 const initPayload = null;
 const payloadActionHandler = {
   [PAYLOAD_RESPONSE]: (state, action) => action.payload.payloads,
+  [APPROVE_PAYLOAD_RESPONSE]: (state, action) => action.payload,
+  [REJECT_PAYLOAD_RESPONSE]: (state, action) => action.payload,
 };
 
 export const payloadReducer = createReducer(initPayload, payloadActionHandler);
@@ -39,9 +45,9 @@ function* requestApprovePayload(action) {
       `${process.env.REACT_APP_BASE_URL}payloads/approve`,
       action.payload,
     );
-    yield put(createAction(PAYLOAD_RESPONSE, response));
+    if (response.success) yield put(createAction(APPROVE_PAYLOAD_RESPONSE, response.payloads));
   } catch (error) {
-    yield put(createAction(PAYLOAD_ERROR, error));
+    yield put(createAction(APPROVE_PAYLOAD_ERROR, error));
   }
 }
 function* watchApprovePayloadRequest() {
@@ -49,3 +55,23 @@ function* watchApprovePayloadRequest() {
 }
 
 export const approvePayloadSaga = [fork(watchApprovePayloadRequest)];
+
+/* handler state for reject payload */
+function* requestRejectPayload(action) {
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}payloads/reject`,
+      action.payload,
+    );
+    if (response.success) yield put(createAction(REJECT_PAYLOAD_RESPONSE, response.payloads));
+  } catch (error) {
+    yield put(createAction(REJECT_PAYLOAD_ERROR, error));
+  }
+}
+function* watchRejectPayloadRequest() {
+  yield takeLatest(REJECT_PAYLOAD_REQUEST, requestRejectPayload);
+}
+
+export const rejectPayloadSaga = [fork(watchRejectPayloadRequest)];

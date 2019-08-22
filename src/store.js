@@ -44,6 +44,7 @@ import {
   payloadSaga,
   payloadReducer as payloads,
   approvePayloadSaga,
+  rejectPayloadSaga,
 } from './components/Admin/ducks';
 
 const rootReducer = combineReducers({
@@ -87,6 +88,7 @@ export const rootSaga = function* rootSaga() {
     ...removeAccountSaga,
     ...payloadSaga,
     ...approvePayloadSaga,
+    ...rejectPayloadSaga,
   ]);
 };
 
