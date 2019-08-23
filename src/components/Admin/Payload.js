@@ -4,7 +4,7 @@ import store from 'store';
 import { APPROVE_PAYLOAD_REQUEST, REJECT_PAYLOAD_REQUEST } from './ducks';
 
 export default ({ item }) => {
-  const { title, description, money, poster, images } = item;
+  const { title, description, money, poster, images, amount } = item;
 
   const onApproveHandler = () => {
     store.dispatch({ type: APPROVE_PAYLOAD_REQUEST, payload: item });
@@ -19,6 +19,7 @@ export default ({ item }) => {
       <p>title: {title}</p>
       <p>description: {description}</p>
       <p>money: {money}</p>
+      <p>amount: {amount}</p>
       <p>poster: {poster}</p>
       <p>images: {images}</p>
       <button type="button" onClick={() => onApproveHandler()}>

@@ -196,6 +196,8 @@ export const addToCartSaga = [fork(watchAddToCartRequest)];
 
 /* handler state for update post */
 function* requestUpdatePost(action) {
+  console.log(action.payload);
+
   try {
     const response = yield call(
       callApi,

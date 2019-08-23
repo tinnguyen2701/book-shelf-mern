@@ -1,4 +1,4 @@
-/* eslint-disable */
+// /* eslint-disable */
 const sellRouter = require('express').Router();
 
 const Payload = require('../models/payloadModel');
@@ -24,23 +24,12 @@ sellRouter.post('/', async (req, res) => {
 
   await payload
     .save()
-    .then(result => {
-      User.findById(req.user._id)
-        .then(user => {
-          if (!user) {
-            log.logError('user not found');
-            return res.status(500).send({ success: false });
-          }
-        })
-        .catch(() => {
-          log.logError('find user went wrong!');
-          return res.status(500).send({ success: false });
-        });
+    .then(() => {
       log.logInfo('save success');
       return res.status(200).send({ success: true });
     })
     .catch(() => {
-      log.logError('save book went wrong!');
+      log.logError('save payload went wrong!');
       return res.status(500).send({ success: false });
     });
 });
@@ -48,33 +37,30 @@ sellRouter.post('/', async (req, res) => {
 sellRouter.post('/update', async (req, res) => {
   const { id, title, description, money, amount, poster, images } = req.body;
 
-  await Book.findById(id)
-    .then(book => {
-      if (!book || !book.author.equals(req.user._id)) {
-        log.logError('save book went wrong!');
-        return res.sendStatus(404);
-      }
-      book.title = title;
-      book.description = description;
-      book.money = money;
-      book.amount = amount;
-      book.poster = poster;
-      book.images = images;
+  if (!title || !description || !money || !amount || !poster || !images) {
+    log.logError('fields was required!');
+    return res.status(400).send('fields was required!');
+  }
+  const payload = new Payload({
+    title,
+    description,
+    money,
+    amount,
+    poster,
+    images,
+  });
+  payload._id = id;
+  payload.author = req.user._id;
 
-      book
-        .save()
-        .then(() => {
-          log.logError('update book success!');
-          return res.status(200).send({ success: true });
-        })
-        .catch(() => {
-          log.logError('update book went wrong!');
-          return res.sendStatus(500);
-        });
+  await payload
+    .save()
+    .then(result => {
+      log.logInfo('save success');
+      return res.status(200).send({ success: true });
     })
     .catch(() => {
-      log.logError('find book went wrong!');
-      return res.sendStatus(500);
+      log.logError('save book went wrong!');
+      return res.status(500).send({ success: false });
     });
 });
 
