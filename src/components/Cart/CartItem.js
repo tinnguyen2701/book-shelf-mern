@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import store from 'store';
+import Image from 'utils/Image';
 import { DELETE_CART_REQUEST, ADD_ORDER_REQUEST } from './ducks';
 
 const CartItem = ({ cart, isAuthenticate, history }) => {
@@ -31,7 +32,9 @@ const CartItem = ({ cart, isAuthenticate, history }) => {
   return (
     isVisible && (
       <div>
-        <p>anh: {cart.poster}</p>
+        <p>
+          anh: <Image src={cart.poster} alt={cart.title} size={60} />
+        </p>
         <p>title: {cart.title}</p>
         <p>money: {cart.money}</p>
         <p>

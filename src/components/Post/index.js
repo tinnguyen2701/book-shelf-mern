@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import Image from 'utils/Image';
 import productLocal from 'utils/productLocal';
 import { createAction } from 'dorothy/utils';
 import { POST_REQUEST, FAVORITE_REQUEST, COMMENT_REQUEST, UPDATE_CART_REQUEST } from './ducks';
@@ -45,8 +46,15 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
     post && (
       <div>
         <p>title: {post.title}</p>
-        <p>poster: {post.poster}</p>
-        <p>images: {post.images}</p>
+        <p>
+          poster: <Image src={post.poster} alt={post.title} size={60} />
+        </p>
+        <p>
+          images:{' '}
+          {post.images.map((image, index) => (
+            <Image key={index.toString()} src={image} alt={post.title} size={60} />
+          ))}
+        </p>
         <p>money: {post.money}</p>
         <p>amount: {post.amount === 0 ? 'out of stock' : post.amount}</p>
         <p>description: {post.description}</p>

@@ -24,7 +24,7 @@ const payloadSchema = new Schema({
     required: true,
   },
   images: {
-    type: String,
+    type: Array,
     required: true,
   },
   author: {

@@ -13,6 +13,7 @@ function* requestSell(action) {
       `${process.env.REACT_APP_BASE_URL}sell`,
       action.payload,
     );
+
     yield put(createAction(SELL_RESPONSE, response));
   } catch (error) {
     yield put(createAction(SELL_ERROR, error));

@@ -32,8 +32,8 @@ authRouter.post('/register', async (req, res) => {
 
       newUser
         .save()
-        .then(newUser => res.json({ success: true }))
-        .catch(() => console.log('can not save user'));
+        .then(() => res.json({ success: true }))
+        .catch(() => logger.logError('can not save user'));
     });
   });
 });

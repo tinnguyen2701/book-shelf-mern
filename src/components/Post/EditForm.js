@@ -1,6 +1,7 @@
-/* eslint no-underscore-dangle: "off" */
+/* eslint-disable */
 import React, { useState } from 'react';
 import store from 'store';
+import Image from 'utils/Image';
 import { UPDATE_POST_REQUEST } from './ducks';
 
 export default ({ book, status }) => {
@@ -11,12 +12,46 @@ export default ({ book, status }) => {
   const [poster, setPoster] = useState(book.poster);
   const [images, setImages] = useState(book.images);
 
+  const displayPoster = book.poster;
+  const displayImages = book.images;
+
   const onSubmitHandler = e => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('id', book._id);
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('money', money);
+    formData.append('amount', amount);
+    formData.append('images', images);
+    formData.append('poster', poster);
+
+    for (const image of images) {
+      formData.append('images[]', image, image.name);
+    }
+
     store.dispatch({
       type: UPDATE_POST_REQUEST,
-      payload: { id: book._id, title, description, money, amount, poster, images },
+      payload: formData,
     });
+
+    setTitle(null);
+    setDescription(null);
+    setAmount(null);
+    setMoney(null);
+    setPoster(null);
+    setImages(null);
+  };
+
+  const setPosterHandler = e => {
+    e.persist();
+    setPoster(e.target.files[0]);
+  };
+
+  const setImagesHandler = e => {
+    e.persist();
+    setImages(e.target.files);
   };
 
   return (
@@ -52,28 +87,21 @@ export default ({ book, status }) => {
         <input
           type="text"
           placeholder="Amount.."
-          value={amount}
+          value={amount || ''}
           onChange={e => setAmount(e.target.value)}
         />
         {amount === '' && <span>Amount is required</span>}
       </p>
       <p>
-        <input
-          type="text"
-          placeholder="Poster.."
-          value={poster || ''}
-          onChange={e => setPoster(e.target.value)}
-        />
-        {poster === '' && <span>Poster is required</span>}
+        poster: <Image src={displayPoster} alt={title} size={60} />
+        <input type="file" onChange={e => setPosterHandler(e)} />
       </p>
       <p>
-        <input
-          type="text"
-          placeholder="Images.."
-          value={images || ''}
-          onChange={e => setImages(e.target.value)}
-        />
-        {images === '' && <span>Images is required</span>}
+        images:
+        {displayImages.map((image, index) => (
+          <Image key={index.toString()} src={image} alt={title} size={60} />
+        ))}
+        <input type="file" multiple onChange={e => setImagesHandler(e)} />
       </p>
       <p>
         <button

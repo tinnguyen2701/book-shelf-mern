@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 import React from 'react';
 import store from 'store';
+import Image from 'utils/Image';
 import { APPROVE_PAYLOAD_REQUEST, REJECT_PAYLOAD_REQUEST } from './ducks';
 
 export default ({ item }) => {
@@ -20,8 +21,15 @@ export default ({ item }) => {
       <p>description: {description}</p>
       <p>money: {money}</p>
       <p>amount: {amount}</p>
-      <p>poster: {poster}</p>
-      <p>images: {images}</p>
+      <p>
+        poster: <Image src={poster} alt={title} size={60} />
+      </p>
+      <p>
+        images:{' '}
+        {images.map((image, index) => (
+          <Image key={index.toString()} src={image} alt={title} size={60} />
+        ))}
+      </p>
       <button type="button" onClick={() => onApproveHandler()}>
         Approve
       </button>

@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import store from 'store';
+import Image from 'utils/Image';
 import { createAction } from 'dorothy/utils';
 import productLocal from 'utils/productLocal';
 import { UPDATE_CART_REQUEST } from '../Post/ducks';
@@ -31,7 +32,9 @@ export default ({ book, isAuthenticate, history }) => {
   return (
     <Div>
       <div>{title}</div>
-      <div>anh: {poster}</div>
+      <div>
+        anh: <Image src={poster} alt={title} size={60} />
+      </div>
       <div>{money}</div>
       <div>{description}</div>
       <div>{amount === 0 ? 'out of stock' : amount}</div>

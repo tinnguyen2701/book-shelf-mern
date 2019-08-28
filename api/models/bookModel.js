@@ -24,7 +24,7 @@ const bookSchema = new Schema({
     required: true,
   },
   images: {
-    type: String,
+    type: Array,
     required: true,
   },
   bought: {

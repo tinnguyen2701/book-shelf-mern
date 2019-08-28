@@ -2,11 +2,10 @@
 import React from 'react';
 import store from 'store';
 import { withRouter } from 'react-router-dom';
+import Image from 'utils/Image';
 import { DELETE_SELL_REQUEST, DELETE_BUY_REQUEST } from './ducks';
 
 const Shelf = ({ currentUser, history }) => {
-  console.log(currentUser);
-
   const onDeleteBoughtHandler = id => {
     store.dispatch({ type: DELETE_BUY_REQUEST, payload: id });
   };
@@ -27,7 +26,9 @@ const Shelf = ({ currentUser, history }) => {
         B U Y
         {currentUser.buy.map((item, index) => (
           <div key={index.toString()}>
-            <p>poster: {item.poster}</p>
+            <p>
+              poster: <Image src={item.poster} alt={item.title} size={60} />
+            </p>
             <p>title: {item.title}</p>
             <p>amount: {item.amount}</p>
             <p>money: {item.money}</p>
@@ -43,7 +44,9 @@ const Shelf = ({ currentUser, history }) => {
         <hr />S E L L
         {currentUser.sell.map((item, index) => (
           <div key={index.toString()}>
-            <p>poster: {item.poster}</p>
+            <p>
+              poster: <Image src={item.poster} alt={item.title} size={60} />
+            </p>
             <p>title: {item.title}</p>
             <p>amount: {item.amount + item.bought}</p>
             <p>soll: {item.bought}</p>

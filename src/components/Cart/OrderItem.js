@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 import React from 'react';
 import store from 'store';
+import Image from 'utils/Image';
 import { DELETE_ORDER_REQUEST } from './ducks';
 
 export default ({ item }) => {
@@ -12,7 +13,9 @@ export default ({ item }) => {
 
   return (
     <div>
-      <p>anh: {poster}</p>
+      <p>
+        anh: <Image src={poster} alt={title} size={60} />
+      </p>
       <p>title: {title}</p>
       <p>money: {money}</p>
       <p>amount: {amount}</p>

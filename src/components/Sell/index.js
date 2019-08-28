@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import store from 'store';
@@ -13,16 +14,40 @@ const Sell = ({ isSuccess }) => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('money', money);
+    formData.append('amount', amount);
+    formData.append('images', images);
+    formData.append('poster', poster);
+
+    for (const image of images) {
+      formData.append('images[]', image, image.name);
+    }
+
     store.dispatch({
       type: SELL_REQUEST,
-      payload: { title, description, money, amount, poster, images },
+      payload: formData,
     });
+
     setTitle(null);
     setDescription(null);
     setAmount(null);
     setMoney(null);
     setPoster(null);
     setImages(null);
+  };
+
+  const setPosterHandler = e => {
+    e.persist();
+    setPoster(e.target.files[0]);
+  };
+
+  const setImagesHandler = e => {
+    e.persist();
+    setImages(e.target.files);
   };
 
   return (
@@ -64,22 +89,10 @@ const Sell = ({ isSuccess }) => {
         {amount === '' && <span>Amount is required</span>}
       </p>
       <p>
-        <input
-          type="text"
-          placeholder="Poster.."
-          value={poster || ''}
-          onChange={e => setPoster(e.target.value)}
-        />
-        {poster === '' && <span>Poster is required</span>}
+        <input type="file" onChange={e => setPosterHandler(e)} />
       </p>
       <p>
-        <input
-          type="text"
-          placeholder="Images.."
-          value={images || ''}
-          onChange={e => setImages(e.target.value)}
-        />
-        {images === '' && <span>Images is required</span>}
+        <input type="file" multiple onChange={e => setImagesHandler(e)} />
       </p>
       <p>
         <button

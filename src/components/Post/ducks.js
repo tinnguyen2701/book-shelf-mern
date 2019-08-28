@@ -133,9 +133,7 @@ function* requestDeleteComment(action) {
     const response = yield call(
       callApi,
       'POST',
-      `${process.env.REACT_APP_BASE_URL}books/${action.payload.postId}/comments/delete/${
-        action.payload.commentId
-      }`,
+      `${process.env.REACT_APP_BASE_URL}books/${action.payload.postId}/comments/delete/${action.payload.commentId}`,
     );
     yield put(createAction(DELETE_COMMENT_RESPONSE, response));
   } catch (error) {
@@ -153,9 +151,7 @@ function* requestEditComment(action) {
     const response = yield call(
       callApi,
       'POST',
-      `${process.env.REACT_APP_BASE_URL}books/${action.payload.postId}/comments/edit/${
-        action.payload.commentId
-      }`,
+      `${process.env.REACT_APP_BASE_URL}books/${action.payload.postId}/comments/edit/${action.payload.commentId}`,
       { text: action.payload.text },
     );
     yield put(createAction(EDIT_COMMENT_RESPONSE, response));
@@ -196,8 +192,6 @@ export const addToCartSaga = [fork(watchAddToCartRequest)];
 
 /* handler state for update post */
 function* requestUpdatePost(action) {
-  console.log(action.payload);
-
   try {
     const response = yield call(
       callApi,
