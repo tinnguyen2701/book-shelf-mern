@@ -93,27 +93,45 @@ sellRouter.post(
       log.logError('fields was required!');
       return res.status(400).send('fields was required!');
     }
-    const payload = new Payload({
-      title,
-      description,
-      money,
-      amount,
-      poster,
-      images,
-    });
-    payload._id = id;
-    payload.author = req.user._id;
 
-    await payload
-      .save()
-      .then(() => {
-        log.logInfo('save success');
-        return res.status(200).send({ success: true });
-      })
-      .catch(err => {
-        log.logError('save book went wrong!', err);
-        return res.status(500).send({ success: false });
+    const matchPayload = await Payload.findById(id);
+
+    if (!matchPayload) {
+      const payload = new Payload({
+        title,
+        description,
+        money,
+        amount,
+        poster,
+        images,
       });
+      payload._id = id;
+      payload.author = req.user._id;
+
+      await payload
+        .save()
+        .then(() => {
+          logger.logInfo('save success');
+          return res.status(200).send({ success: true });
+        })
+        .catch(err => {
+          log.logError('save book went wrong!', err);
+          return res.status(500).send({ success: false });
+        });
+    } else {
+      await Payload.updateOne(
+        { _id: id },
+        { $set: { title, description, money, amount, poster, images, author: req.user._id } },
+      )
+        .then(() => {
+          log.logInfo('save success');
+          return res.status(200).send({ success: true });
+        })
+        .catch(err => {
+          log.logError('save book went wrong!', err);
+          return res.status(500).send({ success: false });
+        });
+    }
   },
 );
 

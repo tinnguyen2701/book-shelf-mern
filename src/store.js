@@ -11,7 +11,6 @@ import {
   verifySaga,
   updatePasswordSaga,
   editUserSaga,
-  shelfSaga,
 } from './components/auth/ducks';
 import { sellReducer as sell, sellSaga } from './components/Sell/duck';
 import { booksReducer as books, booksSaga } from './components/duck';
@@ -79,7 +78,6 @@ export const rootSaga = function* rootSaga() {
     ...deleteOrderSaga,
     ...buySaga,
     ...editUserSaga,
-    ...shelfSaga,
     ...deleteBuySaga,
     ...deleteSellSaga,
     ...editSellSaga,

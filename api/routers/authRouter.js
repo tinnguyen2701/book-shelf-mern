@@ -32,8 +32,8 @@ authRouter.post('/register', async (req, res) => {
 
       newUser
         .save()
-        .then(() => res.json({ success: true }))
-        .catch(() => logger.logError('can not save user'));
+        .then(newUser => res.json({ success: true }))
+        .catch(() => console.log('can not save user'));
     });
   });
 });
@@ -51,11 +51,29 @@ authRouter.post('/login', async (req, res) => {
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
         jwt.sign({ id: user._id }, process.env.SECRET, { expiresIn: '1d' }, function(err, token) {
-          return res.status(200).json({
-            success: true,
-            token: token,
-            currentUser: user,
-          });
+          return Promise.all(
+            user.sell.map(item => {
+              const book = Book.findById(item);
+              return book;
+            }),
+          )
+            .then(responses => {
+              user.sell = responses;
+              return res.status(200).json({
+                success: true,
+                token: token,
+                currentUser: user,
+              });
+            })
+            .catch(() => {
+              logger.logError('find book went wrong');
+              return res.sendStatus(500);
+            })
+
+            .catch(() => {
+              logger.logError('find user went wrong');
+              return res.sendStatus(500);
+            });
         });
       } else {
         return res.status(403).send({ success: false, message: 'password was wrong' });
@@ -145,7 +163,27 @@ authRouter.post('/updatePassword', passport.authenticate('jwt', { session: false
 });
 
 authRouter.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-  return res.status(200).json(req.user);
+  return Promise.resolve(User.findById(req.user._id))
+    .then(user =>
+      Promise.all(
+        user.sell.map(item => {
+          const book = Book.findById(item);
+          return book;
+        }),
+      )
+        .then(responses => {
+          req.user.sell = responses;
+          return res.status(200).json(req.user);
+        })
+        .catch(() => {
+          logger.logError('find book went wrong');
+          return res.sendStatus(500);
+        }),
+    )
+    .catch(() => {
+      logger.logError('find user went wrong');
+      return res.sendStatus(500);
+    });
 });
 
 authRouter.post('/editUser', passport.authenticate('jwt', { session: false }), (req, res) => {
@@ -181,29 +219,6 @@ authRouter.post('/editUser', passport.authenticate('jwt', { session: false }), (
         }
       }
     })
-    .catch(() => {
-      logger.logError('find user went wrong');
-      return res.sendStatus(500);
-    });
-});
-
-authRouter.get('/shelf', passport.authenticate('jwt', { session: false }), (req, res) => {
-  return Promise.resolve(User.findById(req.user._id))
-    .then(user =>
-      Promise.all(
-        user.sell.map(item => {
-          const book = Book.findById(item);
-          return book;
-        }),
-      )
-        .then(responses => {
-          return res.status(200).send(responses);
-        })
-        .catch(() => {
-          logger.logError('find book went wrong');
-          return res.sendStatus(500);
-        }),
-    )
     .catch(() => {
       logger.logError('find user went wrong');
       return res.sendStatus(500);
