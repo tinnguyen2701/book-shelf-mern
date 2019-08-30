@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Button from 'utils/Button';
 import { removeToken } from 'dorothy/utils/callApi';
 import { createAction } from 'dorothy/utils';
 import { SIGN_OUT } from '../auth/ducks';
@@ -15,10 +16,30 @@ const Div = styled.div`
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    background-color: ${props => props.theme.backgroundColor};
+    padding: 5px;
 
     > li > a {
+      font-size: 1em;
       text-decoration: none;
-      color: ${props => props.theme.color};
+      color: white;
+    }
+
+    a:active {
+      color: #383030;
+    }
+
+    > li > form > input {
+      border-radius: 5px;
+      border: none;
+      padding: 5px;
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    > li > form > button {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
   }
 `;
@@ -49,24 +70,21 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
         <li>
           <Link to="/">Home</Link>
         </li>
-        <li>
-          <Link to="/auth/login">Login</Link>
-        </li>
-        <li>
-          <Link to="/auth/register">Register</Link>
-        </li>
+        {!currentUser && (
+          <li>
+            <Link to="/auth/login">Login</Link>
+          </li>
+        )}
+        {!currentUser && (
+          <li>
+            <Link to="/auth/register">Register</Link>
+          </li>
+        )}
         <li>
           <Link to="/carts">
             Your cart ({currentUser ? currentUser.carts.length : carts.length})
           </Link>
         </li>
-        {currentUser && (
-          <li>
-            <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
-              Sign out
-            </Link>
-          </li>
-        )}
         {currentUser && (
           <li>
             <Link to="/sell">Sell</Link>
@@ -77,6 +95,18 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
             <Link to="/user">{currentUser.username}</Link>
           </li>
         )}
+        {currentUser && (
+          <li>
+            <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
+              Sign out
+            </Link>
+          </li>
+        )}
+        {currentUser && currentUser.email === process.env.REACT_APP_MAIL_ADMIN && (
+          <li>
+            <Link to="/admin">Manage</Link>
+          </li>
+        )}
         <li>
           <form onSubmit={e => onSubmitHandler(e)}>
             <input
@@ -85,15 +115,9 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
               value={value}
               onChange={e => setValue(e.target.value)}
             />
-            <button type="submit">Search</button>
-            {/* <Link to={{ pathname: '/search', search: `?name=${value}` }}>Search</Link> */}
+            <Button type="submit" value="Search" disabled={!value} />
           </form>
         </li>
-        {currentUser && currentUser.email === process.env.REACT_APP_MAIL_ADMIN && (
-          <li>
-            <Link to="/admin">Manage</Link>
-          </li>
-        )}
       </ul>
     </Div>
   );

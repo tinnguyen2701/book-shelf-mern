@@ -5,16 +5,7 @@ import { BOOKS_REQUEST } from './duck';
 import Book from './Book';
 
 const Div = styled.div`
-  display: flex;
-
-  > div:first-child {
-    width: 20%;
-  }
-
-  > div:last-child {
-    width: 80%;
-    display: flex;
-  }
+  padding: 3% 3%;
 `;
 
 const Home = ({ books, currentUser, dispatch, history }) => {
@@ -24,12 +15,9 @@ const Home = ({ books, currentUser, dispatch, history }) => {
 
   return (
     <Div>
-      <div>category</div>
-      <div>
-        {books.map((book, index) => (
-          <Book key={index.toString()} history={history} book={book} isAuthenticate={currentUser} />
-        ))}
-      </div>
+      {books.map((book, index) => (
+        <Book key={index.toString()} history={history} book={book} isAuthenticate={currentUser} />
+      ))}
     </Div>
   );
 };

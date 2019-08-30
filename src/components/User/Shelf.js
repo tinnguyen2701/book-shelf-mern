@@ -1,9 +1,39 @@
 /* eslint no-underscore-dangle: 'off' */
 import React from 'react';
+import styled from 'styled-components';
 import store from 'store';
 import { withRouter } from 'react-router-dom';
 import Image from 'utils/Image';
+import Button from 'utils/Button';
 import { DELETE_SELL_REQUEST, DELETE_BUY_REQUEST } from './ducks';
+
+const Div = styled.div`
+  > div {
+    margin: 15px 0;
+    display: flex;
+    > div:first-child {
+      border-radius: 5px;
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      width: 100px;
+      height: 100px;
+      overflow: hidden;
+      box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+      margin-right: 10px;
+    }
+
+    > div:first-child:hover {
+      box-shadow: 2px 0px 10px rgba(122, 116, 123, 0.83);
+    }
+
+    > div:last-child {
+      button {
+        margin-right: 10px;
+      }
+    }
+  }
+`;
 
 const Shelf = ({ currentUser, history }) => {
   const onDeleteBoughtHandler = id => {
@@ -20,48 +50,44 @@ const Shelf = ({ currentUser, history }) => {
 
   return (
     <div>
-      <hr />
-      <p>List</p>
-      <div>
-        B U Y
+      <Div>
+        B O U G H T
         {currentUser.buy.map((item, index) => (
           <div key={index.toString()}>
-            <p>
-              poster: <Image src={item.poster} alt={item.title} size={60} />
-            </p>
-            <p>title: {item.title}</p>
-            <p>amount: {item.amount}</p>
-            <p>money: {item.money}</p>
-            <p>
-              <button type="button" onClick={() => onDeleteBoughtHandler(item._id)}>
-                Delete
-              </button>
-            </p>
+            <div>
+              <Image src={item.poster} alt={item.title} size="100%" />
+            </div>
+            <div>
+              <p>title: {item.title}</p>
+              <p>amount: {item.amount}</p>
+              <p>money: {item.money}</p>
+              <p>
+                <Button onClick={() => onDeleteBoughtHandler(item._id)} value="Delete" />
+              </p>
+            </div>
           </div>
         ))}
-      </div>
-      <div>
-        <hr />S E L L
+      </Div>
+      <Div>
+        S O L L
         {currentUser.sell.map((item, index) => (
           <div key={index.toString()}>
-            <p>
-              poster: <Image src={item.poster} alt={item.title} size={60} />
-            </p>
-            <p>title: {item.title}</p>
-            <p>amount: {item.amount + item.bought}</p>
-            <p>soll: {item.bought}</p>
-            <p>money: {item.money}</p>
-            <p>
-              <button type="button" onClick={() => onDeleteSelltHandler(item._id)}>
-                Delete
-              </button>
-              <button type="button" onClick={() => onEditSelltHandler(item._id)}>
-                Edit
-              </button>
-            </p>
+            <div>
+              <Image src={item.poster} alt={item.title} size="100%" />
+            </div>
+            <div>
+              <p>title: {item.title}</p>
+              <p>amount: {item.amount + item.bought}</p>
+              <p>soll: {item.bought}</p>
+              <p>money: {item.money}.000vnđ</p>
+              <p>
+                <Button onClick={() => onDeleteSelltHandler(item._id)} value="Delete" />
+                <Button onClick={() => onEditSelltHandler(item._id)} value="Edit" />
+              </p>
+            </div>
           </div>
         ))}
-      </div>
+      </Div>
     </div>
   );
 };

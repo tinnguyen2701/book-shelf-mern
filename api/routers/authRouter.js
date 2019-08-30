@@ -6,13 +6,17 @@ const passport = require('passport');
 const uuid = require('uuid/v4');
 const nodemailer = require('nodemailer');
 const logger = require('../utils/logger');
+const cloudinary = require('cloudinary');
 
 const User = require('../models/userModel');
 const Book = require('../models/bookModel');
 const Comment = require('../models/commentModel');
 
-authRouter.post('/register', async (req, res) => {
-  const { email, username, password, avatar } = req.body;
+const upload = require('../config/multer');
+require('../config/cloudinary');
+
+authRouter.post('/register', upload.fields([{ name: 'avatar', maxCount: 1 }]), async (req, res) => {
+  const { email, username, password } = req.body;
 
   if (!email || !username || !password) {
     return res.status(403).json({ message: 'you can not register' });
@@ -20,6 +24,16 @@ authRouter.post('/register', async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user) return res.status(403).json({ message: 'this user was used' });
+
+  const avatar = await cloudinary.v2.uploader
+    .upload(req.files['avatar'][0].path)
+    .then(result => {
+      return result.secure_url;
+    })
+    .catch(err => {
+      logger.logError('faild to upload avatar', err);
+      res.sendStatus(500);
+    });
 
   bcrypt.genSalt(10, function(err, salt) {
     bcrypt.hash(password, salt, function(err, hash) {
@@ -186,44 +200,59 @@ authRouter.get('/', passport.authenticate('jwt', { session: false }), (req, res)
     });
 });
 
-authRouter.post('/editUser', passport.authenticate('jwt', { session: false }), (req, res) => {
-  const { username, oldPassword, newPassword, avatar } = req.body;
+authRouter.post(
+  '/editUser',
+  upload.fields([{ name: 'avatar', maxCount: 1 }]),
+  passport.authenticate('jwt', { session: false }),
+  async (req, res) => {
+    const { username, oldPassword, newPassword } = req.body;
 
-  return new Promise((resolve, reject) => {
-    resolve(User.findById(req.user._id));
-  })
-    .then(user => {
-      if (!user) {
-        logger.logError('user not found');
-        return res.sendStatus(404);
-      } else {
-        if (oldPassword) {
-          bcrypt.compare(oldPassword, user.password).then(isMatch => {
-            if (!isMatch) {
-              return res.status(200).send({ status: 403, message: 'old password was wrong' });
-            }
+    return new Promise((resolve, reject) => {
+      resolve(User.findById(req.user._id));
+    })
+      .then(async user => {
+        if (!user) {
+          logger.logError('user not found');
+          return res.sendStatus(404);
+        } else {
+          const avatar = await cloudinary.v2.uploader
+            .upload(req.files['avatar'][0].path)
+            .then(result => {
+              return result.secure_url;
+            })
+            .catch(err => {
+              logger.logError('faild to upload avatar', err);
+              res.sendStatus(500);
+            });
 
-            bcrypt.genSalt(10, function(err, salt) {
-              bcrypt.hash(newPassword, salt, function(err, hash) {
-                user.password = hash;
-                user.save();
-                return res.status(200).send({ success: true, username, avatar });
+          if (oldPassword !== 'null') {
+            bcrypt.compare(oldPassword, user.password).then(isMatch => {
+              if (!isMatch) {
+                return res.status(200).send({ status: 403, message: 'old password was wrong' });
+              }
+
+              bcrypt.genSalt(10, function(err, salt) {
+                bcrypt.hash(newPassword, salt, function(err, hash) {
+                  user.password = hash;
+                  user.save();
+                  return res.status(200).send({ success: true, username, avatar });
+                });
               });
             });
-          });
-        } else {
-          user.username = username;
-          user.avatar = avatar;
-          user.save();
-          return res.status(200).send({ success: true, username, avatar });
+          } else {
+            user.username = username;
+            user.avatar = avatar;
+            user.save();
+            return res.status(200).send({ success: true, username, avatar });
+          }
         }
-      }
-    })
-    .catch(() => {
-      logger.logError('find user went wrong');
-      return res.sendStatus(500);
-    });
-});
+      })
+      .catch(() => {
+        logger.logError('find user went wrong');
+        return res.sendStatus(500);
+      });
+  },
+);
 
 authRouter.post(
   '/deleteBuy',
@@ -236,25 +265,9 @@ authRouter.post(
           return res.sendStatus(403);
         } else {
           const matchItem = user.buy.findIndex(item => item._id.equals(req.body.id));
-          Book.findById(user.buy[matchItem].bookId)
-            .populate('author')
-            .then(book => {
-              if (!book) {
-                logger.logError('find book not found');
-                return res.sendStatus(404);
-              } else if (book.author._id.equals(req.user._id)) {
-                user.buy.splice(matchItem, 1);
-                user.save();
-                return res.status(200).send(user.buy);
-              } else {
-                logger.logError('you dont have permission');
-                return res.sendStatus(401);
-              }
-            })
-            .catch(() => {
-              logger.logError('find book went wrong');
-              return res.sendStatus(500);
-            });
+          user.buy.splice(matchItem, 1);
+          user.save();
+          return res.status(200).send(user.buy);
         }
       })
       .catch(() => {

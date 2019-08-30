@@ -1,8 +1,36 @@
 /* eslint-disable */
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import store from 'store';
 import { SELL_REQUEST } from './duck';
+import Button from 'utils/Button';
+
+const Div = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+
+  > form {
+    background: tomato;
+    color: white;
+    padding: 7%;
+    border-radius: 5px;
+    box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+    margin: 2%;
+
+    input {
+      float: right;
+      border-radius: 5px;
+      border: none;
+      padding: 5px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+`;
 
 const Sell = ({ isSuccess }) => {
   const [title, setTitle] = useState(null);
@@ -51,59 +79,65 @@ const Sell = ({ isSuccess }) => {
   };
 
   return (
-    <form onSubmit={e => onSubmitHandler(e)}>
-      <p>
-        <input
-          type="text"
-          placeholder="Title.."
-          value={title || ''}
-          onChange={e => setTitle(e.target.value)}
-        />
-        {title === '' && <span>Title is required</span>}
-      </p>
-      <p>
-        <input
-          type="text"
-          placeholder="Description.."
-          value={description || ''}
-          onChange={e => setDescription(e.target.value)}
-        />
-        {description === '' && <span>Description is required</span>}
-      </p>
-      <p>
-        <input
-          type="text"
-          placeholder="Money.."
-          value={money || ''}
-          onChange={e => setMoney(e.target.value)}
-        />
-        {money === '' && <span>Money is required</span>}
-      </p>
-      <p>
-        <input
-          type="text"
-          placeholder="Amount.."
-          value={amount || ''}
-          onChange={e => setAmount(e.target.value)}
-        />
-        {amount === '' && <span>Amount is required</span>}
-      </p>
-      <p>
-        <input type="file" onChange={e => setPosterHandler(e)} />
-      </p>
-      <p>
-        <input type="file" multiple onChange={e => setImagesHandler(e)} />
-      </p>
-      <p>
-        <button
-          type="submit"
-          disabled={!title || !description || !money || !amount || !poster || !images}
-        >
-          Submit
-        </button>
-      </p>
-      <p>{isSuccess && 'sell thanh cong'}</p>
-    </form>
+    <Div>
+      <form onSubmit={e => onSubmitHandler(e)}>
+        <p>
+          <span>Title: </span>
+          <input
+            type="text"
+            placeholder="Title.."
+            value={title || ''}
+            onChange={e => setTitle(e.target.value)}
+          />
+        </p>
+        {title === '' && <p>Title is required!</p>}
+        <p>
+          <span>Description: </span>
+          <input
+            type="text"
+            placeholder="Description.."
+            value={description || ''}
+            onChange={e => setDescription(e.target.value)}
+          />
+        </p>
+        {description === '' && <p>Description is required!</p>}
+        <p>
+          <span>Money: </span>
+          <input
+            type="text"
+            placeholder="Money.."
+            value={money || ''}
+            onChange={e => setMoney(e.target.value)}
+          />
+        </p>
+        {money === '' && <p>Money is required!</p>}
+        <p>
+          <span>Amount: </span>
+          <input
+            type="text"
+            placeholder="Amount.."
+            value={amount || ''}
+            onChange={e => setAmount(e.target.value)}
+          />
+        </p>
+        {amount === '' && <p>Amount is required!</p>}
+        <p>
+          <span>Poster: </span>
+          <input type="file" onChange={e => setPosterHandler(e)} />
+        </p>
+        <p>
+          <span>Images: </span>
+          <input type="file" multiple onChange={e => setImagesHandler(e)} />
+        </p>
+        <p>
+          <Button
+            type="submit"
+            disabled={!title || !description || !money || !amount || !poster || !images}
+          />
+        </p>
+        <p>{isSuccess && 'sell thanh cong'}</p>
+      </form>
+    </Div>
   );
 };
 

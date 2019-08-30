@@ -1,6 +1,7 @@
 /* eslint no-underscore-dangle: "off" */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import Image from 'utils/Image';
 import productLocal from 'utils/productLocal';
 import { createAction } from 'dorothy/utils';
@@ -42,51 +43,55 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
     dispatch({ type: COMMENT_REQUEST, payload: { postId, comment } });
   };
 
+  const Div = styled.div``;
+
   return (
     post && (
-      <div>
-        <p>title: {post.title}</p>
-        <p>
-          poster: <Image src={post.poster} alt={post.title} size={60} />
-        </p>
-        <p>
-          images:{' '}
-          {post.images.map((image, index) => (
-            <Image key={index.toString()} src={image} alt={post.title} size={60} />
-          ))}
-        </p>
-        <p>money: {post.money}</p>
-        <p>amount: {post.amount === 0 ? 'out of stock' : post.amount}</p>
-        <p>description: {post.description}</p>
-        <p>like {post.favorites.length}</p>
-        <button type="button" onClick={() => onClickHandler()}>
-          Like
-        </button>
-
-        <p>
-          <button type="button" onClick={() => setAmount(amount + 1)}>
-            +
-          </button>
-          {amount}
-          <button type="button" onClick={() => amount > 1 && setAmount(amount - 1)}>
-            -
-          </button>
-          <button type="button" onClick={() => onAddToCardHandler()}>
-            Add to cart
-          </button>
-        </p>
-
-        <form onSubmit={e => onSubmitHandler(e)}>
-          <input type="text" value={comment || ''} onChange={e => setComment(e.target.value)} />
-          <button disabled={!comment} type="submit">
-            Send
-          </button>
-        </form>
+      <Div>
         <div>
-          {post &&
-            post.comments.map(item => <Comment key={item.body} comment={item} postId={postId} />)}
+          <Image src={post.poster} alt={post.title} size={60} />
+          <div>
+            {post.images.map((image, index) => (
+              <Image key={index.toString()} src={image} alt={post.title} size={60} />
+            ))}
+          </div>
         </div>
-      </div>
+        <div>
+          <p>title: {post.title}</p>
+          <p>money: {post.money}</p>
+          <p>amount: {post.amount === 0 ? 'out of stock' : post.amount}</p>
+          <p>description: {post.description}</p>
+          <p>like {post.favorites.length}</p>
+          <button type="button" onClick={() => onClickHandler()}>
+            Like
+          </button>
+
+          <p>
+            <button type="button" onClick={() => setAmount(amount + 1)}>
+              +
+            </button>
+            {amount}
+            <button type="button" onClick={() => amount > 1 && setAmount(amount - 1)}>
+              -
+            </button>
+            <button type="button" onClick={() => onAddToCardHandler()}>
+              Add to cart
+            </button>
+          </p>
+        </div>
+        <div>
+          <form onSubmit={e => onSubmitHandler(e)}>
+            <input type="text" value={comment || ''} onChange={e => setComment(e.target.value)} />
+            <button disabled={!comment} type="submit">
+              Send
+            </button>
+          </form>
+          <div>
+            {post &&
+              post.comments.map(item => <Comment key={item.body} comment={item} postId={postId} />)}
+          </div>
+        </div>
+      </Div>
     )
   );
 };

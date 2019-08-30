@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import store from 'store';
 import { connect } from 'react-redux';
 import { PAYLOAD_REQUEST } from './ducks';
 import Payload from './Payload';
+
+const Div = styled.div`
+  padding: 3% 3%;
+`;
 
 const Admin = ({ payloads }) => {
   useEffect(() => {
@@ -11,12 +16,11 @@ const Admin = ({ payloads }) => {
 
   return (
     payloads && (
-      <div>
-        <h1> a d m i n </h1>
+      <Div>
         {payloads.map((item, index) => (
           <Payload key={index.toString()} item={item} />
         ))}
-      </div>
+      </Div>
     )
   );
 };

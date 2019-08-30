@@ -1,9 +1,34 @@
 /* eslint no-underscore-dangle: "off" */
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
+import Button from 'utils/Button';
 import store from 'store';
 import Image from 'utils/Image';
 import { DELETE_CART_REQUEST, ADD_ORDER_REQUEST } from './ducks';
+
+const Div = styled.div`
+  display: flex;
+  align-items: center;
+
+  > div:first-child {
+    width: 100px;
+    height: 100px;
+    margin: 10px 10px 10px 0px;
+    box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  button {
+    margin-right: 5px;
+  }
+
+  p:nth-child(3) button {
+    margin-left: 5px;
+  }
+`;
 
 const CartItem = ({ cart, isAuthenticate, history }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -31,30 +56,25 @@ const CartItem = ({ cart, isAuthenticate, history }) => {
 
   return (
     isVisible && (
-      <div>
-        <p>
-          anh: <Image src={cart.poster} alt={cart.title} size={60} />
-        </p>
-        <p>title: {cart.title}</p>
-        <p>money: {cart.money}</p>
-        <p>
-          amount: {amount}
-          <button type="button" onClick={() => setAmount(amount + 1)}>
-            +
-          </button>
-          <button type="button" onClick={() => amount > 1 && setAmount(amount - 1)}>
-            -
-          </button>
-          <button type="button" onClick={() => onDeleteItem()}>
-            X
-          </button>
-          <button type="button" onClick={() => onAddOrder()}>
-            Add
-          </button>
-        </p>
-        <hr />
-        <br />
-      </div>
+      <Div>
+        <div>
+          <Image src={cart.poster} alt={cart.title} size="100%" />
+        </div>
+        <div>
+          <p>title: {cart.title}</p>
+          <p>money: {cart.money}.000vnđ</p>
+          <p>
+            amount:
+            <Button type="button" onClick={() => setAmount(amount + 1)} value="+" />
+            {amount}
+            <Button type="button" onClick={() => amount > 1 && setAmount(amount - 1)} value="-" />
+          </p>
+          <p>
+            <Button type="button" onClick={() => onAddOrder()} value="Add" />
+            <Button type="button" onClick={() => onDeleteItem()} value="X" />
+          </p>
+        </div>
+      </Div>
     )
   );
 };

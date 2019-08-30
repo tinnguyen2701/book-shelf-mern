@@ -36,13 +36,13 @@ export const SIGN_OUT = 'SIGN_OUT';
 
 /* handler state for register */
 function* requestRegister(action) {
-  const { email, username, password, avatar, history } = action.payload;
+  const { data, history } = action.payload;
   try {
     const response = yield call(
       callApi,
       'POST',
       `${process.env.REACT_APP_BASE_URL}api/auth/register`,
-      { email, username, password, avatar },
+      data,
     );
     if (response.success) history.push('/auth/login');
   } catch (error) {

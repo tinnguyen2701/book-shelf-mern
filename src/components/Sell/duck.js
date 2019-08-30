@@ -25,8 +25,9 @@ function* watchSellRequest() {
 
 const initSell = null;
 const sellActionHandler = {
+  [SELL_REQUEST]: () => false,
   [SELL_RESPONSE]: (state, action) => action.payload,
-  [SELL_ERROR]: false,
+  [SELL_ERROR]: () => false,
 };
 
 export const sellReducer = createReducer(initSell, sellActionHandler);

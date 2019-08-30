@@ -1,16 +1,48 @@
 /* eslint-disable */
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import store from 'store';
 import Image from 'utils/Image';
+import Button from 'utils/Button';
 import { UPDATE_POST_REQUEST } from './ducks';
+
+const Div = styled.div`
+  padding: 3% 3%;
+
+  > form > p {
+    width: 300px;
+    margin-bottom: 10px;
+
+    > input {
+      float: right;
+    }
+  }
+
+  > form > .why {
+    display: flex;
+    align-items: center;
+
+    > div:first-child {
+      margin: 10px;
+      width: 100px;
+      height: 100px;
+      border-radius: 5px;
+      box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+  }
+`;
 
 export default ({ book, status }) => {
   const [title, setTitle] = useState(book.title);
   const [description, setDescription] = useState(book.description);
   const [money, setMoney] = useState(book.money);
   const [amount, setAmount] = useState(book.amount);
-  const [poster, setPoster] = useState(book.poster);
-  const [images, setImages] = useState(book.images);
+  const [poster, setPoster] = useState(null);
+  const [images, setImages] = useState(null);
 
   const displayPoster = book.poster;
   const displayImages = book.images;
@@ -55,63 +87,76 @@ export default ({ book, status }) => {
   };
 
   return (
-    <form onSubmit={e => onSubmitHandler(e)}>
-      <p>
-        <input
-          type="text"
-          placeholder="Title.."
-          value={title || ''}
-          onChange={e => setTitle(e.target.value)}
-        />
-        {title === '' && <span>Title is required</span>}
-      </p>
-      <p>
-        <input
-          type="text"
-          placeholder="Description.."
-          value={description || ''}
-          onChange={e => setDescription(e.target.value)}
-        />
-        {description === '' && <span>Description is required</span>}
-      </p>
-      <p>
-        <input
-          type="text"
-          placeholder="Money.."
-          value={money || ''}
-          onChange={e => setMoney(e.target.value)}
-        />
-        {money === '' && <span>Money is required</span>}
-      </p>
-      <p>
-        <input
-          type="text"
-          placeholder="Amount.."
-          value={amount || ''}
-          onChange={e => setAmount(e.target.value)}
-        />
-        {amount === '' && <span>Amount is required</span>}
-      </p>
-      <p>
-        poster: <Image src={displayPoster} alt={title} size={60} />
-        <input type="file" onChange={e => setPosterHandler(e)} />
-      </p>
-      <p>
-        images:
-        {displayImages.map((image, index) => (
-          <Image key={index.toString()} src={image} alt={title} size={60} />
-        ))}
-        <input type="file" multiple onChange={e => setImagesHandler(e)} />
-      </p>
-      <p>
-        <button
-          type="submit"
-          disabled={!title || !description || !money || !amount || !poster || !images}
-        >
-          Submit
-        </button>
-      </p>
-      {status && <p>{status}</p>}
-    </form>
+    <Div>
+      <form onSubmit={e => onSubmitHandler(e)}>
+        <p>
+          <span>Title: </span>
+          <input
+            type="text"
+            placeholder="Title.."
+            value={title || ''}
+            onChange={e => setTitle(e.target.value)}
+          />
+          {title === '' && <span>Title is required</span>}
+        </p>
+        <p>
+          <span>Description: </span>
+          <input
+            type="text"
+            placeholder="Description.."
+            value={description || ''}
+            onChange={e => setDescription(e.target.value)}
+          />
+          {description === '' && <span>Description is required</span>}
+        </p>
+        <p>
+          <span>Money: </span>
+          <input
+            type="text"
+            placeholder="Money.."
+            value={money || ''}
+            onChange={e => setMoney(e.target.value)}
+          />
+          {money === '' && <span>Money is required</span>}
+        </p>
+        <p>
+          <span>Amount: </span>
+          <input
+            type="text"
+            placeholder="Amount.."
+            value={amount || ''}
+            onChange={e => setAmount(e.target.value)}
+          />
+          {amount === '' && <span>Amount is required</span>}
+        </p>
+        <div className="why">
+          poster:{' '}
+          <div>
+            <Image src={displayPoster} alt={title} size="100%" />
+          </div>
+          <div>
+            <input type="file" onChange={e => setPosterHandler(e)} />
+          </div>
+        </div>
+        <div className="why">
+          images:
+          {displayImages.map((image, index) => (
+            <div>
+              <Image key={index.toString()} src={image} alt={title} size="100%" />
+            </div>
+          ))}
+          <div>
+            <input type="file" multiple onChange={e => setImagesHandler(e)} />
+          </div>
+        </div>
+        <p>
+          <Button
+            type="submit"
+            disabled={!title || !description || !money || !amount || !poster || !images}
+          />
+        </p>
+        {status && <p>{status}</p>}
+      </form>
+    </Div>
   );
 };

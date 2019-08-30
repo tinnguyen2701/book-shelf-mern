@@ -1,7 +1,40 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { LOGIN_REQUEST } from './ducks';
+import Button from '../../utils/Button';
+
+const Div = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+
+  > form {
+    background: tomato;
+    color: white;
+    padding: 6%;
+    border-radius: 5px;
+    box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+    margin: 2%;
+
+    input {
+      float: right;
+      border-radius: 5px;
+      border: none;
+      padding: 5px;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    a {
+      color: white;
+    }
+  }
+`;
 
 const Login = ({ currentUser, dispatch, history }) => {
   const [email, setEmail] = useState(null);
@@ -13,33 +46,36 @@ const Login = ({ currentUser, dispatch, history }) => {
   };
 
   return (
-    <form onSubmit={e => onSubmitHandler(e)}>
-      {currentUser === false && <p>Email or password was wrong!</p>}
-      <p>
-        <input
-          type="text"
-          placeholder="Email.."
-          value={email || ''}
-          onChange={e => setEmail(e.target.value)}
-        />
-        {email === '' && <span>Email is required</span>}
-      </p>
-      <p>
-        <input
-          type="password"
-          placeholder="Password.."
-          value={password || ''}
-          onChange={e => setPassword(e.target.value)}
-        />
-        {password === '' && <span>Password is required</span>}
-      </p>
-      <p>
-        <button type="submit" disabled={!email || !password}>
-          Submit
-        </button>
-      </p>
-      <Link to="/auth/verify">forgot your password ?</Link>
-    </form>
+    <Div>
+      <form onSubmit={e => onSubmitHandler(e)}>
+        {currentUser === false && <p>Email or password was wrong!</p>}
+        <p>
+          <span>Email: </span>
+          <input
+            type="text"
+            placeholder="Email.."
+            value={email || ''}
+            onChange={e => setEmail(e.target.value)}
+          />
+        </p>
+
+        {email === '' && <p>Email is required!</p>}
+        <p>
+          <span>Password: </span>
+          <input
+            type="password"
+            placeholder="Password.."
+            value={password || ''}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </p>
+        {password === '' && <p>Password is required!</p>}
+        <p>
+          <Button type="submit" disabled={!email || !password} />
+        </p>
+        <Link to="/auth/verify">forgot your password ?</Link>
+      </form>
+    </Div>
   );
 };
 export default connect(state => ({

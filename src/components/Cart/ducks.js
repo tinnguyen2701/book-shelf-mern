@@ -115,7 +115,7 @@ function* requestBuy(action) {
     if (response.status === 403)
       yield put(createAction(MESSAGE, `some thing went wrong with amount item: ${response.title}`));
     if (response.status === 404)
-      yield put(createAction(BUY_ERROR, `not found item: ${response.title}`));
+      yield put(createAction(MESSAGE, `not found item: ${response.title}`));
     if (response.success) {
       yield put(createAction(BUY_RESPONSE, response));
       yield put(createAction(MESSAGE, 'buy success!'));

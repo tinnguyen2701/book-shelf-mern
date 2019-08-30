@@ -1,7 +1,39 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import store from 'store';
 import { VERIFY_REQUEST } from './ducks';
+import Button from '../../utils/Button';
+
+const Div = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+
+  > form {
+    background: tomato;
+    color: white;
+    padding: 7%;
+    border-radius: 5px;
+    box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+    margin: 2%;
+
+    span{
+      margin-right: 15px;
+    }
+
+    input {
+      float: right;
+      border-radius: 5px;
+      border: none;
+      padding: 5px;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+`;
 
 const Verify = ({ isVisible, isCheckInfo, history }) => {
   const [email, setEmail] = useState(null);
@@ -13,35 +45,41 @@ const Verify = ({ isVisible, isCheckInfo, history }) => {
   };
 
   return (
-    <form onSubmit={e => onSubmitHandler(e)}>
-      {isCheckInfo === false && <p>This fields was wrong!</p>}
-      {isVisible ? (
+    <Div>
+      <form onSubmit={e => onSubmitHandler(e)}>
+        {isCheckInfo === false && <p>This fields was wrong!</p>}
+        {isVisible ? (
+          <div>
+            <p>
+              <span>Code: </span>
+              <input
+                type="text"
+                placeholder="Code.."
+                value={code || ''}
+                onChange={e => setCode(e.target.value)}
+              />
+            </p>
+            {code === '' && <p>Code is required!</p>}
+          </div>
+        ) : (
+          <div>
+            <p>
+              <span>Email: </span>
+              <input
+                type="text"
+                placeholder="Email.."
+                value={email || ''}
+                onChange={e => setEmail(e.target.value)}
+              />
+            </p>
+            {email === '' && <p>Email is required!</p>}
+          </div>
+        )}
         <p>
-          <input
-            type="text"
-            placeholder="Code.."
-            value={code || ''}
-            onChange={e => setCode(e.target.value)}
-          />
-          {code === '' && <span>Code is required</span>}
+          <Button type="submit" disabled={!email || !code} />
         </p>
-      ) : (
-        <p>
-          <input
-            type="text"
-            placeholder="Email.."
-            value={email || ''}
-            onChange={e => setEmail(e.target.value)}
-          />
-          {email === '' && <span>Email is required</span>}
-        </p>
-      )}
-      <p>
-        <button type="submit" disabled={!email}>
-          Submit
-        </button>
-      </p>
-    </form>
+      </form>
+    </Div>
   );
 };
 
