@@ -18,7 +18,7 @@ const Div = styled.div`
     }
   }
 
-  > form > .why {
+  > form div:nth-child(5) {
     display: flex;
     align-items: center;
 
@@ -34,8 +34,24 @@ const Div = styled.div`
       overflow: hidden;
     }
   }
-`;
 
+  > form div:nth-child(6) {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+
+    div:nth-child(2) {
+      display: flex;
+      div {
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+`;
 export default ({ book, status }) => {
   const [title, setTitle] = useState(book.title);
   const [description, setDescription] = useState(book.description);
@@ -129,8 +145,8 @@ export default ({ book, status }) => {
           />
           {amount === '' && <span>Amount is required</span>}
         </p>
-        <div className="why">
-          poster:{' '}
+        <div>
+          Poster:{' '}
           <div>
             <Image src={displayPoster} alt={title} size="100%" />
           </div>
@@ -138,13 +154,15 @@ export default ({ book, status }) => {
             <input type="file" onChange={e => setPosterHandler(e)} />
           </div>
         </div>
-        <div className="why">
-          images:
-          {displayImages.map((image, index) => (
-            <div>
-              <Image key={index.toString()} src={image} alt={title} size="100%" />
-            </div>
-          ))}
+        <div>
+          <p>Images:</p>
+          <div>
+            {displayImages.map((image, index) => (
+              <div key={index.toString()}>
+                <Image src={image} alt={title} size="100%" />
+              </div>
+            ))}
+          </div>
           <div>
             <input type="file" multiple onChange={e => setImagesHandler(e)} />
           </div>

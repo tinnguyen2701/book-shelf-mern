@@ -21,6 +21,7 @@ import User from './components/User';
 import EditPost from './components/Post/EditPost';
 import Search from './components/Search';
 import Admin from './components/Admin';
+import AnotherShelf from './components/AnotherShelf';
 
 export default () => {
   useEffect(() => {
@@ -57,6 +58,7 @@ export default () => {
           <Route path="/post/edit/:postId" component={EditPost} />
           <Route path="/carts" component={Cart} />
           <Route path="/user/" component={User} />
+          <Route path="/users/:userId" component={AnotherShelf} />
           <Route path="/search" component={Search} />
           <Route path="/admin" component={Admin} />
         </Router>

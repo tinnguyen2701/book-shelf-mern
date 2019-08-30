@@ -50,6 +50,7 @@ function* watchPostRequest() {
 
 const initPost = null;
 const postActionHandler = {
+  [POST_REQUEST]: () => null,
   [POST_RESPONSE]: (state, action) => action.payload,
   [FAVORITE_RESPONSE]: (state, action) => {
     if (action.payload.add) {

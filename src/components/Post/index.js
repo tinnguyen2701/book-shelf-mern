@@ -3,11 +3,82 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import Image from 'utils/Image';
+import Button from 'utils/Button';
 import productLocal from 'utils/productLocal';
 import { createAction } from 'dorothy/utils';
 import { POST_REQUEST, FAVORITE_REQUEST, COMMENT_REQUEST, UPDATE_CART_REQUEST } from './ducks';
 import Comment from './Comment';
 import { UPDATE_CART } from '../duck';
+
+const Wrapper = styled.div`
+  padding: 3% 3%;
+
+  > div:last-child {
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.3);
+
+    input {
+      border-radius: 4px;
+      border: none;
+      box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+      padding: 4px;
+    }
+  }
+`;
+
+const Div = styled.div`
+  display: flex;
+
+  > div:nth-child(1) {
+    flex: 1;
+
+    .poster {
+      width: 60%;
+      border-radius: 5px;
+
+      > img {
+        border-radius: 10px;
+      }
+    }
+
+    .images {
+      width: 60%;
+      display: flex;
+      margin: 15px 0px;
+      justify-content: center;
+
+      > div {
+        width: 110px;
+        height: 110px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 15px;
+        box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
+        border-radius: 5px;
+      }
+      > div:hover {
+        position: relative;
+        transform: scale(1.08);
+        transition: 200ms all;
+        box-shadow: 2px 0px 10px rgba(122, 116, 123, 0.83);
+      }
+    }
+  }
+
+  > div:nth-child(2) {
+    flex: 1;
+    > p,
+    button {
+      margin-bottom: 15px;
+    }
+
+    button {
+      margin-right: 5px;
+      margin-left: 1px;
+    }
+  }
+`;
 
 const Post = ({ post, match, isAuthenticate, dispatch }) => {
   const { postId } = match.params;
@@ -43,55 +114,54 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
     dispatch({ type: COMMENT_REQUEST, payload: { postId, comment } });
   };
 
-  const Div = styled.div``;
-
   return (
     post && (
-      <Div>
-        <div>
-          <Image src={post.poster} alt={post.title} size={60} />
+      <Wrapper>
+        <Div>
           <div>
-            {post.images.map((image, index) => (
-              <Image key={index.toString()} src={image} alt={post.title} size={60} />
-            ))}
+            <div className="poster">
+              <Image src={post.poster} alt={post.title} size="100%" />
+            </div>
+            <div className="images">
+              <div>
+                <Image src={post.poster} alt={post.title} size="100%" />
+              </div>
+              {post.images.map((image, index) => (
+                <div key={index.toString()}>
+                  <Image src={image} alt={post.title} size="100%" />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-        <div>
-          <p>title: {post.title}</p>
-          <p>money: {post.money}</p>
-          <p>amount: {post.amount === 0 ? 'out of stock' : post.amount}</p>
-          <p>description: {post.description}</p>
-          <p>like {post.favorites.length}</p>
-          <button type="button" onClick={() => onClickHandler()}>
-            Like
-          </button>
+          <div>
+            <p>Title: {post.title}</p>
+            <p>Money: {post.money}.000vnđ</p>
+            <p>Amount: {post.amount === 0 ? 'out of stock' : post.amount}</p>
+            <p>Description: {post.description}</p>
+            <p>Like {post.favorites.length}</p>
+            <Button type="button" onClick={() => onClickHandler()} value="Like" />
 
-          <p>
-            <button type="button" onClick={() => setAmount(amount + 1)}>
-              +
-            </button>
-            {amount}
-            <button type="button" onClick={() => amount > 1 && setAmount(amount - 1)}>
-              -
-            </button>
-            <button type="button" onClick={() => onAddToCardHandler()}>
-              Add to cart
-            </button>
-          </p>
-        </div>
+            <p>
+              <Button onClick={() => setAmount(amount + 1)} value="+" />
+              {amount}
+              {'   '}
+              <Button onClick={() => amount > 1 && setAmount(amount - 1)} value="-" />
+              <Button onClick={() => onAddToCardHandler()} value="Add to cart" />
+            </p>
+          </div>
+        </Div>
         <div>
           <form onSubmit={e => onSubmitHandler(e)}>
+            <span>Comment: </span>
             <input type="text" value={comment || ''} onChange={e => setComment(e.target.value)} />
-            <button disabled={!comment} type="submit">
-              Send
-            </button>
+            <Button disabled={!comment} type="submit" value="Send" />
           </form>
           <div>
             {post &&
               post.comments.map(item => <Comment key={item.body} comment={item} postId={postId} />)}
           </div>
         </div>
-      </Div>
+      </Wrapper>
     )
   );
 };

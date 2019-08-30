@@ -45,6 +45,10 @@ import {
   approvePayloadSaga,
   rejectPayloadSaga,
 } from './components/Admin/ducks';
+import {
+  anotherShelfSaga,
+  anotherShelfReducer as anotherShelf,
+} from './components/AnotherShelf/ducks';
 
 const rootReducer = combineReducers({
   login,
@@ -56,6 +60,7 @@ const rootReducer = combineReducers({
   editSell,
   search,
   payloads,
+  anotherShelf,
 });
 
 export const rootSaga = function* rootSaga() {
@@ -87,6 +92,7 @@ export const rootSaga = function* rootSaga() {
     ...payloadSaga,
     ...approvePayloadSaga,
     ...rejectPayloadSaga,
+    ...anotherShelfSaga,
   ]);
 };
 

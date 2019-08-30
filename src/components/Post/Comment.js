@@ -1,8 +1,31 @@
 /* eslint no-underscore-dangle: "off" */
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
+import Image from 'utils/Image';
+import Button from 'utils/Button';
 import store from 'store';
 import { DELETE_COMMENT_REQUEST, EDIT_COMMENT_REQUEST } from './ducks';
+
+const Div = styled.div`
+  display: flex;
+  margin: 15px 0;
+
+  > div:first-child {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid tomato;
+    margin-right: 15px;
+  }
+
+  > div:last-child {
+  }
+`;
 
 const Comment = ({ comment, postId, currentUser }) => {
   const { body } = comment;
@@ -23,34 +46,34 @@ const Comment = ({ comment, postId, currentUser }) => {
   };
 
   return (
-    <div>
-      <p>
-        {comment.author.avatar} {comment.author.username}
-      </p>
-      {comment && !isVisible ? (
-        <p>{body}</p>
-      ) : (
-        <form onSubmit={e => onEditHandler(e)}>
-          <input type="text" value={text || body} onChange={e => setText(e.target.value)} />
-          <button type="submit">Update</button>
-          <button type="button" onClick={() => setVisible(false)}>
-            Close
-          </button>
-        </form>
-      )}
-
-      {comment && comment.author && currentUser && currentUser._id === comment.author._id && (
+    <Div>
+      <div>
+        <Image src={comment.author.avatar} size="100%" />
+      </div>
+      <div>
+        {comment.author.username}
         <div>
-          <button type="button" onClick={() => setVisible(true)}>
-            Edit
-          </button>
-          <button type="button" onClick={() => onDeleteHandler()}>
-            Delete
-          </button>
+          {comment && !isVisible ? (
+            <p>{body}</p>
+          ) : (
+            <form onSubmit={e => onEditHandler(e)}>
+              <input type="text" value={text || body} onChange={e => setText(e.target.value)} />
+              <button type="submit">Update</button>
+              <button type="button" onClick={() => setVisible(false)}>
+                Close
+              </button>
+            </form>
+          )}
+
+          {comment && comment.author && currentUser && currentUser._id === comment.author._id && (
+            <div>
+              <Button onClick={() => setVisible(true)} value="Edit" />
+              <Button onClick={() => onDeleteHandler()} value="Delete" />
+            </div>
+          )}
         </div>
-      )}
-      <hr />
-    </div>
+      </div>
+    </Div>
   );
 };
 

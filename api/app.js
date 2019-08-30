@@ -11,6 +11,7 @@ const cartRouter = require('./routers/cartRouter');
 const orderRouter = require('./routers/orderRouter');
 const searchRouter = require('./routers/searchRouter');
 const payloadRouter = require('./routers/payloadRouter');
+const anotherShelfRouter = require('./routers/anotherShelfRouter');
 
 // init app
 const app = express();
@@ -37,6 +38,7 @@ app.use('/order', passport.authenticate('jwt', { session: false }), orderRouter)
 app.use('/payloads', passport.authenticate('jwt', { session: false }), payloadRouter);
 app.use('/books', bookRouter);
 app.use('/search', searchRouter);
+app.use('/anotherShelf', anotherShelfRouter);
 
 // start server
 app.listen(process.env.PORT_SERVER, () =>

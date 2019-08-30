@@ -1,5 +1,7 @@
+/* eslint no-underscore-dangle: "off" */
 import React from 'react';
 import styled from 'styled-components';
+import { withRouter } from 'react-router-dom';
 import Image from 'utils/Image';
 
 const Div = styled.div`
@@ -19,12 +21,19 @@ const Div = styled.div`
     margin-right: 10px;
   }
 `;
+const ImageWrapper = styled.div`
+  :hover {
+    cursor: pointer;
+  }
+`;
 
-export default ({ user }) => (
+const SearchUser = ({ history, user }) => (
   <Div>
-    <div>
+    <ImageWrapper onClick={() => history.push(`/users/${user._id}`)}>
       <Image src={user.avatar} size="100%" />
-    </div>{' '}
+    </ImageWrapper>
     {user.username}
   </Div>
 );
+
+export default withRouter(SearchUser);
