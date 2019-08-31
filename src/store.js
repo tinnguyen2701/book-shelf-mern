@@ -30,6 +30,7 @@ import {
   deleteOrderSaga,
   buySaga,
   messageReducer as message,
+  backToCartsSaga,
 } from './components/Cart/ducks';
 import {
   deleteBuySaga,
@@ -93,6 +94,7 @@ export const rootSaga = function* rootSaga() {
     ...approvePayloadSaga,
     ...rejectPayloadSaga,
     ...anotherShelfSaga,
+    ...backToCartsSaga,
   ]);
 };
 

@@ -19,6 +19,10 @@ export const BUY_REQUEST = 'BUY_REQUEST';
 export const BUY_RESPONSE = 'BUY_RESPONSE';
 export const BUY_ERROR = 'BUY_ERROR';
 
+export const BACK_TO_CARTS_REQUEST = 'BACK_TO_CARTS_REQUEST';
+export const BACK_TO_CARTS_RESPONSE = 'BACK_TO_CARTS_RESPONSE';
+export const BACK_TO_CARTS_ERROR = 'BACK_TO_CARTS_ERROR';
+
 export const MESSAGE = 'MESSAGE';
 
 /* handler state for delete cart */
@@ -113,12 +117,19 @@ function* requestBuy(action) {
     );
 
     if (response.status === 403)
-      yield put(createAction(MESSAGE, `some thing went wrong with amount item: ${response.title}`));
+      yield put(
+        createAction(MESSAGE, {
+          content: `some thing went wrong with amount item: ${response.title}`,
+          success: false,
+        }),
+      );
     if (response.status === 404)
-      yield put(createAction(MESSAGE, `not found item: ${response.title}`));
+      yield put(
+        createAction(MESSAGE, { content: `not found item: ${response.title}`, success: false }),
+      );
     if (response.success) {
       yield put(createAction(BUY_RESPONSE, response));
-      yield put(createAction(MESSAGE, 'buy success!'));
+      yield put(createAction(MESSAGE, { content: 'buy success!', success: true }));
     }
   } catch (error) {
     yield put(createAction(BUY_ERROR, error));
@@ -129,11 +140,12 @@ function* watchBuyRequest() {
 }
 
 export const buyActionHandler = {
-  [BUY_RESPONSE]: state => ({
+  [BUY_RESPONSE]: (state, action) => ({
     ...state,
     currentUser: {
       ...state.currentUser,
       order: [],
+      buy: action.payload.buy,
     },
   }),
 };
@@ -145,3 +157,34 @@ const messageActionHandler = {
 export const messageReducer = createReducer(initMessage, messageActionHandler);
 
 export const buySaga = [fork(watchBuyRequest)];
+
+/* handler state for back to carts */
+function* requestBackToCarts(action) {
+  try {
+    const response = yield call(
+      callApi,
+      'POST',
+      `${process.env.REACT_APP_BASE_URL}order/back`,
+      action.payload,
+    );
+    yield put(createAction(BACK_TO_CARTS_RESPONSE, response));
+  } catch (error) {
+    yield put(createAction(BACK_TO_CARTS_ERROR, error));
+  }
+}
+function* watchBackToCartsRequest() {
+  yield takeLatest(BACK_TO_CARTS_REQUEST, requestBackToCarts);
+}
+
+export const backToCartsActionHandler = {
+  [BACK_TO_CARTS_RESPONSE]: (state, action) => ({
+    ...state,
+    currentUser: {
+      ...state.currentUser,
+      carts: action.payload.carts,
+      order: action.payload.order,
+    },
+  }),
+};
+
+export const backToCartsSaga = [fork(watchBackToCartsRequest)];

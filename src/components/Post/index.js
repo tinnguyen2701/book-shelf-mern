@@ -36,7 +36,7 @@ const Div = styled.div`
   > div:nth-child(1) {
     flex: 1;
 
-    .poster {
+    > div:nth-child(1) {
       max-width: 100%;
       height: 300px;
       border-radius: 5px;
@@ -47,7 +47,7 @@ const Div = styled.div`
       }
     }
 
-    .images {
+    > div:nth-child(2) {
       width: 100%;
       display: flex;
       margin: 15px 0px;
@@ -130,10 +130,10 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
       <Wrapper>
         <Div>
           <div>
-            <div className="poster">
+            <div>
               <Image src={displayPoster || post.poster} alt="poster" size="100%" checkHeight />
             </div>
-            <div className="images">
+            <div>
               <WrapperImage onClick={() => setDisplayPoster(post.poster)}>
                 <Image src={post.poster} alt={post.title} size="100%" />
               </WrapperImage>

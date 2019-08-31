@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import Button from 'utils/Button';
 import store from 'store';
+import { createAction } from 'dorothy/utils';
 import Image from 'utils/Image';
-import { DELETE_CART_REQUEST, ADD_ORDER_REQUEST } from './ducks';
+import { DELETE_CART_REQUEST, ADD_ORDER_REQUEST, MESSAGE } from './ducks';
 
 const Div = styled.div`
   display: flex;
@@ -30,12 +31,19 @@ const Div = styled.div`
   }
 `;
 
+const WrapperImage = styled.div`
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 const CartItem = ({ cart, isAuthenticate, history }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [amount, setAmount] = useState(cart.amount);
 
   const onDeleteItem = () => {
     if (isAuthenticate) {
+      store.dispatch(createAction(MESSAGE, null));
       store.dispatch({ type: DELETE_CART_REQUEST, payload: cart._id });
     } else if (window.localStorage.getItem('carts')) {
       const carts = JSON.parse(window.localStorage.getItem('carts')).filter(
@@ -48,6 +56,7 @@ const CartItem = ({ cart, isAuthenticate, history }) => {
 
   const onAddOrder = () => {
     if (isAuthenticate) {
+      store.dispatch(createAction(MESSAGE, null));
       store.dispatch({ type: ADD_ORDER_REQUEST, payload: { cart, amount } });
     } else {
       history.push('/auth/login');
@@ -57,9 +66,9 @@ const CartItem = ({ cart, isAuthenticate, history }) => {
   return (
     isVisible && (
       <Div>
-        <div>
+        <WrapperImage onClick={() => history.push(`/post/${cart.bookId}`)}>
           <Image src={cart.poster} alt={cart.title} size="100%" />
-        </div>
+        </WrapperImage>
         <div>
           <p>title: {cart.title}</p>
           <p>money: {cart.money}.000vnđ</p>

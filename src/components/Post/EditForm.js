@@ -128,7 +128,7 @@ export default ({ book, status }) => {
         <p>
           <span>Money: </span>
           <input
-            type="text"
+            type="number"
             placeholder="Money.."
             value={money || ''}
             onChange={e => setMoney(e.target.value)}
@@ -138,7 +138,7 @@ export default ({ book, status }) => {
         <p>
           <span>Amount: </span>
           <input
-            type="text"
+            type="number"
             placeholder="Amount.."
             value={amount || ''}
             onChange={e => setAmount(e.target.value)}

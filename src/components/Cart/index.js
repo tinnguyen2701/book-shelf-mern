@@ -21,6 +21,10 @@ const Div = styled.div`
   }
 `;
 
+const P = styled.p`
+  ${props => (props.success ? 'color: green' : 'color: red')}
+`;
+
 const Cart = ({ currentUser, message, dispatch }) => {
   const onClickHandler = () => {
     dispatch({ type: BUY_REQUEST, payload: { order: currentUser.order } });
@@ -48,7 +52,7 @@ const Cart = ({ currentUser, message, dispatch }) => {
         {currentUser && currentUser.order.length > 0 && (
           <Button type="button" onClick={() => onClickHandler()} value="Buy" />
         )}
-        {message && <p>{message}</p>}
+        {message && <P success={message.success}>{message.content}</P>}
       </div>
     </Div>
   );

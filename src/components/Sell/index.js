@@ -104,7 +104,7 @@ const Sell = ({ isSuccess }) => {
         <p>
           <span>Money: </span>
           <input
-            type="text"
+            type="number"
             placeholder="Money.."
             value={money || ''}
             onChange={e => setMoney(e.target.value)}
@@ -114,7 +114,7 @@ const Sell = ({ isSuccess }) => {
         <p>
           <span>Amount: </span>
           <input
-            type="text"
+            type="number"
             placeholder="Amount.."
             value={amount || ''}
             onChange={e => setAmount(e.target.value)}

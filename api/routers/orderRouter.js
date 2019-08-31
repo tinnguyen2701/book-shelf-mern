@@ -75,4 +75,19 @@ orderRouter.post('/buy', async (req, res) => {
     });
 });
 
+orderRouter.post('/back', async (req, res) => {
+  await User.findById(req.user._id)
+    .then(user => {
+      user.carts.push(req.body);
+      const matchOrder = user.order.findIndex(item => item._id.equals(req.body._id));
+      user.order.splice(matchOrder, 1);
+      user.save();
+      return res.status(200).send({ carts: user.carts, order: user.order });
+    })
+    .catch(() => {
+      logger.logError('find user went wrong!');
+      return res.sendStatus(500);
+    });
+});
+
 module.exports = orderRouter;

@@ -4,10 +4,12 @@ import styled from 'styled-components';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Button from 'utils/Button';
+import Image from 'utils/Image';
 import { removeToken } from 'dorothy/utils/callApi';
 import { createAction } from 'dorothy/utils';
 import { SIGN_OUT } from '../auth/ducks';
 import { UPDATE_CART } from '../duck';
+import 'font-awesome/css/font-awesome.min.css';
 
 const Div = styled.div`
   > ul {
@@ -70,43 +72,6 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
         <li>
           <Link to="/">Home</Link>
         </li>
-        {!currentUser && (
-          <li>
-            <Link to="/auth/login">Login</Link>
-          </li>
-        )}
-        {!currentUser && (
-          <li>
-            <Link to="/auth/register">Register</Link>
-          </li>
-        )}
-        <li>
-          <Link to="/carts">
-            Your cart ({currentUser ? currentUser.carts.length : carts.length})
-          </Link>
-        </li>
-        {currentUser && (
-          <li>
-            <Link to="/sell">Sell</Link>
-          </li>
-        )}
-        {currentUser && (
-          <li>
-            <Link to="/user">{currentUser.username}</Link>
-          </li>
-        )}
-        {currentUser && (
-          <li>
-            <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
-              Sign out
-            </Link>
-          </li>
-        )}
-        {currentUser && currentUser.email === process.env.REACT_APP_MAIL_ADMIN && (
-          <li>
-            <Link to="/admin">Manage</Link>
-          </li>
-        )}
         <li>
           <form onSubmit={e => onSubmitHandler(e)}>
             <input
@@ -118,6 +83,47 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
             <Button type="submit" value="Search" disabled={!value} />
           </form>
         </li>
+        {!currentUser && (
+          <li>
+            <Link to="/auth/login">Login</Link>
+          </li>
+        )}
+        {!currentUser && (
+          <li>
+            <Link to="/auth/register">Register</Link>
+          </li>
+        )}
+
+        {currentUser && (
+          <li>
+            <Link to="/sell">Sell</Link>
+          </li>
+        )}
+        {currentUser && currentUser.email === process.env.REACT_APP_MAIL_ADMIN && (
+          <li>
+            <Link to="/admin">Manage</Link>
+          </li>
+        )}
+
+        <li>
+          <Link to="/carts">
+            <i className="fa fa-cart-plus" /> (
+            {currentUser ? currentUser.carts.length : carts.length})
+          </Link>
+        </li>
+        {currentUser && (
+          <li>
+            <Image src={currentUser.avatar} alt="avatar" size="30px" />{' '}
+            <Link to="/user">{currentUser.username}</Link>
+          </li>
+        )}
+        {currentUser && (
+          <li>
+            <Link to="/auth/logout" onClick={e => onClickHandler(e, history)}>
+              Sign out
+            </Link>
+          </li>
+        )}
       </ul>
     </Div>
   );

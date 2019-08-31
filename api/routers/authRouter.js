@@ -215,15 +215,21 @@ authRouter.post(
           logger.logError('user not found');
           return res.sendStatus(404);
         } else {
-          const avatar = await cloudinary.v2.uploader
-            .upload(req.files['avatar'][0].path)
-            .then(result => {
-              return result.secure_url;
-            })
-            .catch(err => {
-              logger.logError('faild to upload avatar', err);
-              res.sendStatus(500);
-            });
+          var avatar;
+
+          if (req.files['avatar'] !== undefined) {
+            avatar = await cloudinary.v2.uploader
+              .upload(req.files['avatar'][0].path)
+              .then(result => {
+                return result.secure_url;
+              })
+              .catch(err => {
+                logger.logError('faild to upload avatar', err);
+                res.sendStatus(500);
+              });
+          } else {
+            avatar = null;
+          }
 
           if (oldPassword !== 'null') {
             bcrypt.compare(oldPassword, user.password).then(isMatch => {
@@ -235,15 +241,15 @@ authRouter.post(
                 bcrypt.hash(newPassword, salt, function(err, hash) {
                   user.password = hash;
                   user.save();
-                  return res.status(200).send({ success: true, username, avatar });
+                  return res.status(200).send({ success: true });
                 });
               });
             });
           } else {
             user.username = username;
-            user.avatar = avatar;
+            if (avatar) user.avatar = avatar;
             user.save();
-            return res.status(200).send({ success: true, username, avatar });
+            return res.status(200).send({ success: true });
           }
         }
       })

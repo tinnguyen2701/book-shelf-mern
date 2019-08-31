@@ -7,6 +7,7 @@ import {
   deleteOrderActionHandler,
   buyActionHandler,
   MESSAGE,
+  backToCartsActionHandler,
 } from '../Cart/ducks';
 import { deleteBuyActionHandler, deleteSellActionHandler } from '../User/ducks';
 
@@ -122,6 +123,7 @@ const loginActionHandler = {
   ...buyActionHandler,
   ...deleteBuyActionHandler,
   ...deleteSellActionHandler,
+  ...backToCartsActionHandler,
 };
 
 export const loginReducer = createReducer(initLogin, loginActionHandler);
@@ -213,8 +215,9 @@ function* requestEditUser(action) {
       action.payload,
     );
     if (response.status === 403) {
-      yield put(createAction(MESSAGE, response.message));
-    } else if (response.success) yield put(createAction(MESSAGE, 'save profile success!'));
+      yield put(createAction(MESSAGE, { content: response.message, success: false }));
+    } else if (response.success)
+      yield put(createAction(MESSAGE, { content: 'save profile success!', success: true }));
   } catch (error) {
     yield put(createAction(EDIT_USER_ERROR, error));
   }

@@ -1,11 +1,13 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Image from 'utils/Image';
 import Button from 'utils/Button';
+import { createAction } from 'dorothy/utils';
 import { EDIT_USER_REQUEST } from '../auth/ducks';
 import { REMOVE_ACCOUNT_REQUEST } from './ducks';
+import { MESSAGE } from '../Cart/ducks';
 
 const Div = styled.div`
   width: 50%;
@@ -42,7 +44,15 @@ const Div = styled.div`
   }
 `;
 
+const P = styled.p`
+  ${props => (props.success ? 'color: green' : 'color: red')}
+`;
+
 const ProfileUser = ({ currentUser, message, dispatch }) => {
+  useEffect(() => {
+    dispatch(createAction(MESSAGE, null));
+  }, []);
+
   const [username, setUsername] = useState(currentUser.username);
   const [oldPassword, setOldPassword] = useState(null);
   const [newPassword, setNewPassword] = useState(null);
@@ -104,14 +114,15 @@ const ProfileUser = ({ currentUser, message, dispatch }) => {
         <input type="file" onChange={e => setAvatarHandler(e)} />
       </p>
       <p>
-        <Button onClick={() => onClickHandler()} value="Save" disabled={!avatar} />
+        <Button onClick={() => onClickHandler()} value="Save" />
         <Button onClick={() => setIsVisible(true)} value="Remove Account" />
       </p>
-      {message && <p>{message}</p>}
+      {message && <P success={message.success}>{message.content}</P>}
       <br />
       {isVisible && (
         <div>
           <Button onClick={() => onRemoveAccountHandler()} value="REMOVE" />
+          {'  '}
           <Button onClick={() => setIsVisible(false)} value="Cancel" />
         </div>
       )}

@@ -35,6 +35,12 @@ const Div = styled.div`
   }
 `;
 
+const WrapperImage = styled.div`
+  :hover {
+    cursor: pointer;
+  }
+`;
+
 const Shelf = ({ currentUser, history }) => {
   const onDeleteBoughtHandler = id => {
     store.dispatch({ type: DELETE_BUY_REQUEST, payload: id });
@@ -54,9 +60,9 @@ const Shelf = ({ currentUser, history }) => {
         B O U G H T
         {currentUser.buy.map((item, index) => (
           <div key={index.toString()}>
-            <div>
+            <WrapperImage onClick={() => history.push(`/post/${item.bookId}`)}>
               <Image src={item.poster} alt={item.title} size="100%" />
-            </div>
+            </WrapperImage>
             <div>
               <p>title: {item.title}</p>
               <p>amount: {item.amount}</p>
@@ -72,9 +78,9 @@ const Shelf = ({ currentUser, history }) => {
         S O L L
         {currentUser.sell.map((item, index) => (
           <div key={index.toString()}>
-            <div>
+            <WrapperImage onClick={() => history.push(`/post/${item._id}`)}>
               <Image src={item.poster} alt={item.title} size="100%" />
-            </div>
+            </WrapperImage>
             <div>
               <p>title: {item.title}</p>
               <p>amount: {item.amount + item.bought}</p>

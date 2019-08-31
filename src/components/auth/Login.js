@@ -52,7 +52,7 @@ const Login = ({ currentUser, dispatch, history }) => {
         <p>
           <span>Email: </span>
           <input
-            type="text"
+            type="email"
             placeholder="Email.."
             value={email || ''}
             onChange={e => setEmail(e.target.value)}

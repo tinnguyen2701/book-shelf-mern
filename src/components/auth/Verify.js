@@ -41,6 +41,7 @@ const Verify = ({ isVisible, isCheckInfo, history }) => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
+    setEmail(null);
     store.dispatch({ type: VERIFY_REQUEST, payload: { email, code, history } });
   };
 
@@ -50,6 +51,7 @@ const Verify = ({ isVisible, isCheckInfo, history }) => {
         {isCheckInfo === false && <p>This fields was wrong!</p>}
         {isVisible ? (
           <div>
+            <p>We just a send new code to your mail!</p>
             <p>
               <span>Code: </span>
               <input
@@ -66,7 +68,7 @@ const Verify = ({ isVisible, isCheckInfo, history }) => {
             <p>
               <span>Email: </span>
               <input
-                type="text"
+                type="email"
                 placeholder="Email.."
                 value={email || ''}
                 onChange={e => setEmail(e.target.value)}
@@ -76,7 +78,7 @@ const Verify = ({ isVisible, isCheckInfo, history }) => {
           </div>
         )}
         <p>
-          <Button type="submit" disabled={!email || !code} />
+          <Button type="submit" disabled={!email && !code} />
         </p>
       </form>
     </Div>

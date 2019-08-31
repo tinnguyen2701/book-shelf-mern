@@ -64,7 +64,7 @@ export default ({ history }) => {
         <p>
           <span>Email</span>
           <input
-            type="text"
+            type="email"
             placeholder="Email.."
             value={email || ''}
             onChange={e => setEmail(e.target.value)}
@@ -84,7 +84,7 @@ export default ({ history }) => {
         <p>
           <span>Password:</span>
           <input
-            type="text"
+            type="password"
             placeholder="Password.."
             value={password || ''}
             onChange={e => setPassword(e.target.value)}
@@ -94,7 +94,7 @@ export default ({ history }) => {
         <p>
           <span>Confirm Password:</span>
           <input
-            type="text"
+            type="password"
             placeholder="Confirm Password.."
             value={confirm || ''}
             onChange={e => setConfirm(e.target.value)}
