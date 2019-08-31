@@ -23,6 +23,10 @@ const Wrapper = styled.div`
       box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
       padding: 4px;
     }
+
+    form > button {
+      margin-left: 5px;
+    }
   }
 `;
 
@@ -33,16 +37,18 @@ const Div = styled.div`
     flex: 1;
 
     .poster {
-      width: 60%;
+      max-width: 100%;
+      height: 300px;
       border-radius: 5px;
 
       > img {
+        max-width: 100%;
         border-radius: 10px;
       }
     }
 
     .images {
-      width: 60%;
+      width: 100%;
       display: flex;
       margin: 15px 0px;
       justify-content: center;
@@ -80,6 +86,10 @@ const Div = styled.div`
   }
 `;
 
+const WrapperImage = styled.div`
+  cursor: pointer;
+`;
+
 const Post = ({ post, match, isAuthenticate, dispatch }) => {
   const { postId } = match.params;
 
@@ -89,6 +99,7 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
 
   const [comment, setComment] = useState(null);
   const [amount, setAmount] = useState(1);
+  const [displayPoster, setDisplayPoster] = useState(null);
 
   const onClickHandler = () => {
     dispatch({ type: FAVORITE_REQUEST, payload: postId });
@@ -120,16 +131,16 @@ const Post = ({ post, match, isAuthenticate, dispatch }) => {
         <Div>
           <div>
             <div className="poster">
-              <Image src={post.poster} alt={post.title} size="100%" />
+              <Image src={displayPoster || post.poster} alt="poster" size="100%" checkHeight />
             </div>
             <div className="images">
-              <div>
+              <WrapperImage onClick={() => setDisplayPoster(post.poster)}>
                 <Image src={post.poster} alt={post.title} size="100%" />
-              </div>
+              </WrapperImage>
               {post.images.map((image, index) => (
-                <div key={index.toString()}>
+                <WrapperImage key={index.toString()} onClick={() => setDisplayPoster(image)}>
                   <Image src={image} alt={post.title} size="100%" />
-                </div>
+                </WrapperImage>
               ))}
             </div>
           </div>

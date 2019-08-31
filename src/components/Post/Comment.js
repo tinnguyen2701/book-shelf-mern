@@ -10,6 +10,9 @@ import { DELETE_COMMENT_REQUEST, EDIT_COMMENT_REQUEST } from './ducks';
 const Div = styled.div`
   display: flex;
   margin: 15px 0;
+  button {
+    margin-right: 5px;
+  }
 
   > div:first-child {
     width: 40px;
@@ -23,7 +26,8 @@ const Div = styled.div`
     margin-right: 15px;
   }
 
-  > div:last-child {
+  form {
+    margin: 5px 0;
   }
 `;
 
@@ -58,10 +62,8 @@ const Comment = ({ comment, postId, currentUser }) => {
           ) : (
             <form onSubmit={e => onEditHandler(e)}>
               <input type="text" value={text || body} onChange={e => setText(e.target.value)} />
-              <button type="submit">Update</button>
-              <button type="button" onClick={() => setVisible(false)}>
-                Close
-              </button>
+              <Button type="submit" value="Update" />
+              <Button onClick={() => setVisible(false)} value="Close" />
             </form>
           )}
 
