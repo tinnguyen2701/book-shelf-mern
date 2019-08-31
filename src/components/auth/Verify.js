@@ -41,7 +41,6 @@ const Verify = ({ isVisible, isCheckInfo, history }) => {
 
   const onSubmitHandler = e => {
     e.preventDefault();
-    setEmail(null);
     store.dispatch({ type: VERIFY_REQUEST, payload: { email, code, history } });
   };
 
@@ -78,7 +77,7 @@ const Verify = ({ isVisible, isCheckInfo, history }) => {
           </div>
         )}
         <p>
-          <Button type="submit" disabled={!email && !code} />
+          <Button type="submit" disabled={!email} />
         </p>
       </form>
     </Div>
