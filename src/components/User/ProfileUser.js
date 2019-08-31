@@ -108,7 +108,7 @@ const ProfileUser = ({ currentUser, message, dispatch }) => {
         />
       </p>
       <p>
-        <span>
+        <span style={{ margin: '10px 0' }}>
           Avatar: <Image src={displayAvatar} size="64px" />
         </span>
         <input type="file" onChange={e => setAvatarHandler(e)} />

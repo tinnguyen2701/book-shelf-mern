@@ -18,7 +18,19 @@ const Div = styled.div`
     box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
     display: flex;
     justify-content: center;
+    border-radius: 5px;
     align-items: center;
+
+    img {
+      width: inherit;
+    }
+
+    div:hover {
+      position: relative;
+      transform: scale(1.08);
+      transition: 200ms all;
+      box-shadow: 2px 0px 10px rgba(122, 116, 123, 0.83);
+    }
   }
 
   button {
@@ -46,7 +58,7 @@ const OrderItem = ({ item, history }) => {
   return (
     <Div>
       <WrapperImage onClick={() => history.push(`/post/${item.bookId}`)}>
-        <Image src={poster} alt={title} size="100%" />
+        <Image src={poster} alt={title} size="100%" checkHeight />
       </WrapperImage>
       <div>
         <p>title: {title}</p>

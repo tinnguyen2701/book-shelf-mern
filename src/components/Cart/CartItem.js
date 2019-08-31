@@ -20,6 +20,18 @@ const Div = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 5px;
+
+    img {
+      width: inherit;
+    }
+
+    :hover {
+      position: relative;
+      transform: scale(1.08);
+      transition: 200ms all;
+      box-shadow: 2px 0px 10px rgba(122, 116, 123, 0.83);
+    }
   }
 
   button {
@@ -67,7 +79,7 @@ const CartItem = ({ cart, isAuthenticate, history }) => {
     isVisible && (
       <Div>
         <WrapperImage onClick={() => history.push(`/post/${cart.bookId}`)}>
-          <Image src={cart.poster} alt={cart.title} size="100%" />
+          <Image src={cart.poster} alt={cart.title} size="100%" checkHeight />
         </WrapperImage>
         <div>
           <p>title: {cart.title}</p>

@@ -112,8 +112,8 @@ const Header = ({ history, currentUser, carts, dispatch }) => {
           </Link>
         </li>
         {currentUser && (
-          <li>
-            <Image src={currentUser.avatar} alt="avatar" size="30px" />{' '}
+          <li style={{ display: 'flex', alignItems: 'center' }}>
+            <Image src={currentUser.avatar} alt="avatar" size="30px" checkHeight />{' '}
             <Link to="/user">{currentUser.username}</Link>
           </li>
         )}

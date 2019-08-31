@@ -18,38 +18,14 @@ const Div = styled.div`
     }
   }
 
-  > form div:nth-child(5) {
-    display: flex;
-    align-items: center;
-
-    > div:first-child {
-      margin: 10px;
-      width: 100px;
-      height: 100px;
-      border-radius: 5px;
-      box-shadow: 1px 0px 5px rgba(122, 116, 123, 0.83);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
+  .poster,
+  .images {
+    height: 120px;
+    margin: 10px 0;
   }
 
-  > form div:nth-child(6) {
-    margin-bottom: 10px;
-    display: flex;
-    flex-direction: column;
-
-    div:nth-child(2) {
-      display: flex;
-      div {
-        width: 100px;
-        height: 100px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-    }
+  button {
+    margin-top: 10px;
   }
 `;
 export default ({ book, status }) => {
@@ -75,8 +51,10 @@ export default ({ book, status }) => {
     formData.append('images', images);
     formData.append('poster', poster);
 
-    for (const image of images) {
-      formData.append('images[]', image, image.name);
+    if (images) {
+      for (const image of images) {
+        formData.append('images[]', image, image.name);
+      }
     }
 
     store.dispatch({
@@ -113,8 +91,8 @@ export default ({ book, status }) => {
             value={title || ''}
             onChange={e => setTitle(e.target.value)}
           />
-          {title === '' && <span>Title is required</span>}
         </p>
+        {title === '' && <p>Title is required</p>}
         <p>
           <span>Description: </span>
           <input
@@ -123,8 +101,8 @@ export default ({ book, status }) => {
             value={description || ''}
             onChange={e => setDescription(e.target.value)}
           />
-          {description === '' && <span>Description is required</span>}
         </p>
+        {description === '' && <p>Description is required</p>}
         <p>
           <span>Money: </span>
           <input
@@ -133,7 +111,7 @@ export default ({ book, status }) => {
             value={money || ''}
             onChange={e => setMoney(e.target.value)}
           />
-          {money === '' && <span>Money is required</span>}
+          {money === '' && <p>Money is required</p>}
         </p>
         <p>
           <span>Amount: </span>
@@ -143,12 +121,12 @@ export default ({ book, status }) => {
             value={amount || ''}
             onChange={e => setAmount(e.target.value)}
           />
-          {amount === '' && <span>Amount is required</span>}
         </p>
+        {amount === '' && <p>Amount is required</p>}
         <div>
           Poster:{' '}
-          <div>
-            <Image src={displayPoster} alt={title} size="100%" />
+          <div className="poster">
+            <Image src={displayPoster} alt={title} size="100%" checkHeight />
           </div>
           <div>
             <input type="file" onChange={e => setPosterHandler(e)} />
@@ -158,8 +136,8 @@ export default ({ book, status }) => {
           <p>Images:</p>
           <div>
             {displayImages.map((image, index) => (
-              <div key={index.toString()}>
-                <Image src={image} alt={title} size="100%" />
+              <div className="images" key={index.toString()}>
+                <Image src={image} alt={title} size="100%" checkHeight />
               </div>
             ))}
           </div>
@@ -168,10 +146,7 @@ export default ({ book, status }) => {
           </div>
         </div>
         <p>
-          <Button
-            type="submit"
-            disabled={!title || !description || !money || !amount || !poster || !images}
-          />
+          <Button type="submit" disabled={!title || !description || !money || !amount} />
         </p>
         {status && <p>{status}</p>}
       </form>

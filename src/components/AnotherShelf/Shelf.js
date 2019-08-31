@@ -36,13 +36,17 @@ const WrapperImage = styled.div`
   :hover {
     cursor: pointer;
   }
+
+  img {
+    width: inherit;
+  }
 `;
 
 const Shelf = ({ item, history }) => {
   return (
     <Div>
       <WrapperImage onClick={() => history.push(`/post/${item.id}`)}>
-        <Image src={item.poster} size="100%" />
+        <Image src={item.poster} size="100%" checkHeight />
       </WrapperImage>
       <div>
         <p>Title: {item.title}</p>

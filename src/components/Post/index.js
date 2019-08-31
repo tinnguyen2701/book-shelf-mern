@@ -40,6 +40,8 @@ const Div = styled.div`
       max-width: 100%;
       height: 300px;
       border-radius: 5px;
+      display: flex;
+      justify-content: center;
 
       > img {
         max-width: 100%;
@@ -56,6 +58,7 @@ const Div = styled.div`
       > div {
         width: 110px;
         height: 110px;
+        overflow: hidden;
         display: flex;
         justify-content: center;
         align-items: center;

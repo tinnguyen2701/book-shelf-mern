@@ -56,7 +56,7 @@ export default ({ book, isAuthenticate, history }) => {
     <Div>
       <div>{title}</div>
       <div>
-        <Image src={poster} alt={title} size="100%" />
+        <Image src={poster} alt={title} size="100%" checkHeight />
       </div>
       <div>{money}.000vnđ</div>
       <div>{amount === 0 ? 'out of stock' : <span>amount: {amount} </span>}</div>
