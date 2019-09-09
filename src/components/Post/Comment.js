@@ -61,7 +61,7 @@ const Comment = ({ comment, postId, currentUser }) => {
             <p>{body}</p>
           ) : (
             <form onSubmit={e => onEditHandler(e)}>
-              <input type="text" value={text || body} onChange={e => setText(e.target.value)} />
+              <input type="text" value={text || ''} onChange={e => setText(e.target.value)} />
               <Button type="submit" value="Update" />
               <Button onClick={() => setVisible(false)} value="Close" />
             </form>
