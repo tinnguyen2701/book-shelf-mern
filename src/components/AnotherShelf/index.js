@@ -16,7 +16,7 @@ const anotherShelf = ({ shelf, match, dispatch }) => {
   return (
     shelf && (
       <Div>
-        <p>List soll of {shelf.username}</p>
+        <p>List sold of {shelf.username}</p>
         {shelf.sell.map((item, index) => (
           <Shelf key={index.toString()} item={item} />
         ))}

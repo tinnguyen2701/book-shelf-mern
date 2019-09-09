@@ -48,7 +48,7 @@ export default ({ history }) => {
         <p>
           <span>Password</span>
           <input
-            type="text"
+            type="password"
             placeholder="password.."
             value={password || ''}
             onChange={e => setPassword(e.target.value)}

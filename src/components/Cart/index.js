@@ -1,12 +1,13 @@
 /* eslint no-underscore-dangle: "off" */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { createAction } from 'dorothy/utils';
 import Button from 'utils/Button';
 import CartItem from './CartItem';
 import OrderItem from './OrderItem';
-import { BUY_REQUEST } from './ducks';
+import { BUY_REQUEST, MESSAGE } from './ducks';
 
 const Div = styled.div`
   padding: 3% 3%;
@@ -26,6 +27,10 @@ const P = styled.p`
 `;
 
 const Cart = ({ currentUser, message, dispatch }) => {
+  useEffect(() => {
+    dispatch(createAction(MESSAGE, null));
+  }, []);
+
   const onClickHandler = () => {
     dispatch({ type: BUY_REQUEST, payload: { order: currentUser.order } });
   };

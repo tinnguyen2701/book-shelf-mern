@@ -75,7 +75,7 @@ const Shelf = ({ currentUser, history }) => {
         ))}
       </Div>
       <Div>
-        S O L L
+        S O L D
         {currentUser.sell.map((item, index) => (
           <div key={index.toString()}>
             <WrapperImage onClick={() => history.push(`/post/${item._id}`)}>
@@ -84,7 +84,7 @@ const Shelf = ({ currentUser, history }) => {
             <div>
               <p>title: {item.title}</p>
               <p>amount: {item.amount + item.bought}</p>
-              <p>soll: {item.bought}</p>
+              <p>sold: {item.bought}</p>
               <p>money: {item.money}.000vnđ</p>
               <p>
                 <Button onClick={() => onDeleteSelltHandler(item._id)} value="Delete" />
